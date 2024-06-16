@@ -1,0 +1,73 @@
+﻿@page "/hill"
+@rendermode InteractiveServer
+
+<PageTitle>Hill</PageTitle>
+<p>Enter text: </p>
+<textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+<br>
+<p>Enter key: </p>
+<textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+<button @onclick="Hill">SUBMIT</button>
+<p>@ciphertext</p>
+
+<p>@temp</p>
+
+@code {
+    private string plaintext = "";
+    private string key = "";
+    private string ciphertext = "";
+    private string temp = "";
+
+    private void Caesar()
+    {
+        ciphertext = "";
+        int k = int.Parse(key);
+        plaintext = plaintext.ToUpper();
+        for (int i = 0; i < plaintext.Length; i++)
+        {
+            if(plaintext[i] + k > 'Z')
+            {
+                ciphertext += (char)( plaintext[i] + k - 26);
+            }
+            else
+            {
+                ciphertext += (char)(plaintext[i] + k);
+            }
+        }
+    }
+
+    private void Hill()
+    {
+        ciphertext = "";
+        key = key.ToUpper();
+        plaintext = plaintext.ToUpper();
+        int n = (int)Math.Sqrt(key.Length);
+
+        int[,] matrixKey = new int[n, n]; //set up matrix key
+        for (int i = 0; i < key.Length; i++)
+        {
+            matrixKey[(i/n), (i%n)] = key[i] - 'A';
+        }
+
+        for (int i = 0; i < plaintext.Length; i+= n) //cycle through chunks of text
+        {
+            int[] chunk = new int[n];
+            for (int j = 0; j < n; j++)
+            {
+                chunk[j] = plaintext[i + j] - 'A';
+            }
+
+            int[] newChunk = new int[n];
+
+            for (int row = 0; row < n; row++)
+            {
+                for (int col = 0; col < n; col++)
+                {
+                    newChunk[row] += (matrixKey[row, col] * chunk[col]);
+                }
+                ciphertext += (char)(newChunk[row] %26 + 'A');
+
+            }
+        }
+    }
+}

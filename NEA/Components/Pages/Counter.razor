@@ -7,10 +7,14 @@
 
 <p role="status">Current count: @currentCount</p>
 
+<textarea class="submission" @bind=text @bind:event="oninput">Enter text</textarea>
+<p>@text</p>
+
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
     private int currentCount = 0;
+    private string text = "";
 
     private void IncrementCount()
     {
