@@ -2,59 +2,64 @@
 @rendermode InteractiveServer
 
 <PageTitle>Hill</PageTitle>
-<p>Enter text: </p>
+
+<h1>Hill Cipher</h1>
+
+<p>Plaintext: </p>
 <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+<br>
+<p>Ciphertext: </p>
+<textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
 <br>
 <p>Enter key: </p>
 <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+<br />
 <button @onclick="Hill">SUBMIT</button>
+<br />
 <p>@ciphertext</p>
-
-<p>@temp</p>
 
 @code {
     private string plaintext = "";
     private string key = "";
     private string ciphertext = "";
-    private string temp = "";
-
-    private void Caesar()
-    {
-        ciphertext = "";
-        int k = int.Parse(key);
-        plaintext = plaintext.ToUpper();
-        for (int i = 0; i < plaintext.Length; i++)
-        {
-            if(plaintext[i] + k > 'Z')
-            {
-                ciphertext += (char)( plaintext[i] + k - 26);
-            }
-            else
-            {
-                ciphertext += (char)(plaintext[i] + k);
-            }
-        }
-    }
+    private string test = "";
 
     private void Hill()
     {
-        ciphertext = "";
+        ciphertext = ciphertext.ToUpper();
         key = key.ToUpper();
         plaintext = plaintext.ToUpper();
         int n = (int)Math.Sqrt(key.Length);
 
+        string original = plaintext;
+        string result = ciphertext;
+
+        bool encrypt = true;
+        if(ciphertext!= "")
+        {
+            encrypt = false;
+            original = ciphertext;
+            result = plaintext;
+        }
+
         int[,] matrixKey = new int[n, n]; //set up matrix key
         for (int i = 0; i < key.Length; i++)
         {
-            matrixKey[(i/n), (i%n)] = key[i] - 'A';
+            matrixKey[(i / n), (i % n)] = key[i] - 'A';
         }
 
-        for (int i = 0; i < plaintext.Length; i+= n) //cycle through chunks of text
+        if(!encrypt)
+        {
+            matrixKey = inverse(matrixKey);
+        }
+        
+
+        for (int i = 0; i < original.Length; i+= n) //cycle through chunks of text
         {
             int[] chunk = new int[n];
             for (int j = 0; j < n; j++)
             {
-                chunk[j] = plaintext[i + j] - 'A';
+                chunk[j] = original[i + j] - 'A';
             }
 
             int[] newChunk = new int[n];
@@ -65,9 +70,111 @@
                 {
                     newChunk[row] += (matrixKey[row, col] * chunk[col]);
                 }
-                ciphertext += (char)(newChunk[row] %26 + 'A');
+                result += (char)(newChunk[row] %26 + 'A');
 
             }
         }
+
+        if(encrypt)
+        {
+            plaintext = original;
+            ciphertext = result;
+        }
+        else
+        {
+            plaintext = result;
+            ciphertext = original;
+        }
+
+
+    }
+
+    private int[,] inverse(int[,] matrix)
+    {
+        int n = (int)Math.Sqrt(matrix.Length);
+        int[,] inverse = new int[n, n];
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                //CALCULATE MINOR//
+                int[,] minors = calculateMinors(matrix, i, j);
+
+                inverse[j, i] = (int)Math.Pow((-1), i + j) * det(minors);//CALCULATE COFACTORS AND TRANSPOSE
+            }
+        }
+
+        int determinant = det(matrix);
+        ////calculate Modular multiplicative inverse of determinant
+        int d = 0; //Modular multiplicative inverse
+        int x = 1;
+        while (d == 0 && x < determinant)
+        {
+            if (determinant * x % 26 == 1)
+            {
+                d = x;
+            }
+            x++;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                inverse[i, j] *= d;
+                inverse[i, j] %= 26;
+                if (inverse[i, j] < 0)
+                {
+                    inverse[i, j] += 26;
+                }
+            }
+        }
+
+        return inverse;
+    }
+
+    private int det(int[,] matrix)
+    {
+        int d = 0;
+        if (matrix.Length > 1)
+        {
+            for (int i = 0; i < Math.Sqrt(matrix.Length); i++)
+            {
+                d += (int)(matrix[i, 0] * Math.Pow(-1, i) * det(calculateMinors(matrix, i, 0)));
+            }
+        }
+        else
+        {
+            d = matrix[0, 0];
+        }
+
+        return d;
+    }
+
+
+    private int[,] calculateMinors(int[,] matrix, int i, int j)
+    {
+        int n = (int)Math.Sqrt(matrix.Length);
+        int[,] minors = new int[n - 1, n - 1];
+        int x = 0;
+
+        for (int mi = 0; mi < n; mi++)
+        {
+            if (mi != i)
+            {
+                int y = 0;
+                for (int mj = 0; mj < n; mj++)
+                {
+                    if (mj != j)
+                    {
+                        minors[x, y] = matrix[mi, mj];
+                        y++;
+                    }
+                }
+                x++;
+            }
+        }
+        return minors;
     }
 }
