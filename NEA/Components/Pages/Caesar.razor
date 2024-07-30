@@ -1,0 +1,54 @@
+﻿@page "/caesar"
+@rendermode InteractiveServer
+
+<PageTitle>Caesar</PageTitle>
+
+<h1>Caesar Cipher</h1>
+
+<p>Plaintext: </p>
+<textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+<br>
+<p>Ciphertext: </p>
+<textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+<br>
+<p>Enter key: </p>
+<textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+<br />
+<button @onclick="caesar">SUBMIT</button>
+<br />
+<input type="checkbox" @bind=encrypt>
+
+<p>@errors</p>
+
+@code {
+    private string plaintext = "";
+    private int key = 0;
+    private string ciphertext = "";
+    private string errors = "";
+    private bool encrypt;
+
+    private void caesar()
+    {
+        plaintext = plaintext.ToLower();
+        ciphertext = ciphertext.ToLower();
+        if (encrypt)
+        {
+            for (int i = 0; i < plaintext.Length; i++)
+            {
+                ciphertext += (char)((plaintext[i] - 97 + key) %26 + 97);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < ciphertext.Length; i++)
+            {
+                plaintext += (char) ((ciphertext[i] - 97 + key) %26 + 97);
+            }
+        }
+        plaintext = plaintext.ToUpper();
+        ciphertext = ciphertext.ToUpper();
+    }
+
+}
+
+

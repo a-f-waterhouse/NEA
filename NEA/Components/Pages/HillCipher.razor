@@ -14,45 +14,72 @@
 <p>Enter key: </p>
 <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
 <br />
+
+<input type="checkbox" @bind=encrypt>
+
 <button @onclick="Hill">SUBMIT</button>
 <br />
-<p>@ciphertext</p>
+<p>@error</p>
 
 @code {
     private string plaintext = "";
     private string key = "";
     private string ciphertext = "";
-    private string test = "";
+    private string error = "";
+    private bool encrypt;
 
-    private void Hill()
+
+    private int[,] Validate()
     {
-        ciphertext = ciphertext.ToUpper();
         key = key.ToUpper();
-        plaintext = plaintext.ToUpper();
-        int n = (int)Math.Sqrt(key.Length);
-
-        string original = plaintext;
-        string result = ciphertext;
-
-        bool encrypt = true;
-        if(ciphertext!= "")
-        {
-            encrypt = false;
-            original = ciphertext;
-            result = plaintext;
-        }
-
+        int n = (int)(Math.Sqrt(key.Length));
         int[,] matrixKey = new int[n, n]; //set up matrix key
         for (int i = 0; i < key.Length; i++)
         {
             matrixKey[(i / n), (i % n)] = key[i] - 'A';
         }
+        if(!coprime(det(matrixKey),26))
+        {
+            error = "Key Matrix has no inverse.";
+        }      
+
+        return matrixKey;
+    }
+
+    private bool coprime(int a, int b)
+    {
+        if (a == 0 || b == 0)
+        {
+            return false;
+        }
+
+        for (int i = 2; i < a; i++)
+        {
+            if(a%i == 0 && b%i==0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void Hill()
+    {
+        ciphertext = ciphertext.ToUpper();        
+        plaintext = plaintext.ToUpper();
+        int n = (int)Math.Sqrt(key.Length);
+
+        int[, ]matrixKey = Validate();
+        string original = plaintext;
+        string result = ciphertext;
 
         if(!encrypt)
         {
+            original = ciphertext;
+            result = plaintext;
             matrixKey = inverse(matrixKey);
-        }
-        
+        }        
 
         for (int i = 0; i < original.Length; i+= n) //cycle through chunks of text
         {
@@ -85,7 +112,6 @@
             plaintext = result;
             ciphertext = original;
         }
-
 
     }
 
