@@ -29,178 +29,58 @@
     private bool encrypt;
 
 
-    private int[,] Validate()
-    {
-        key = key.ToUpper();
-        int n = (int)(Math.Sqrt(key.Length));
-        int[,] matrixKey = new int[n, n]; //set up matrix key
-        for (int i = 0; i < key.Length; i++)
-        {
-            matrixKey[(i / n), (i % n)] = key[i] - 'A';
-        }
-        if(!coprime(det(matrixKey),26))
-        {
-            error = "Key Matrix has no inverse.";
-        }      
-
-        return matrixKey;
-    }
-
-    private bool coprime(int a, int b)
-    {
-        if (a == 0 || b == 0)
-        {
-            return false;
-        }
-
-        for (int i = 2; i < a; i++)
-        {
-            if(a%i == 0 && b%i==0)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private void Hill()
     {
-        ciphertext = ciphertext.ToUpper();        
-        plaintext = plaintext.ToUpper();
-        int n = (int)Math.Sqrt(key.Length);
-
-        int[, ]matrixKey = Validate();
-        string original = plaintext;
-        string result = ciphertext;
+        Matrix matrixKey = new Matrix(key.ToUpper());
+        string original;
+        string result;
 
         if(!encrypt)
         {
-            original = ciphertext;
-            result = plaintext;
-            matrixKey = inverse(matrixKey);
-        }        
-
-        for (int i = 0; i < original.Length; i+= n) //cycle through chunks of text
+            matrixKey = matrixKey.inverse();
+            original = ciphertext.ToUpper();
+            result = plaintext.ToUpper();
+        }
+        else
         {
-            int[] chunk = new int[n];
-            for (int j = 0; j < n; j++)
+            original = plaintext.ToUpper();
+            result = ciphertext.ToUpper();
+        }
+
+        for (int i = 0; i < original.Length; i+= matrixKey.n) //cycle through chunks of text
+        {
+            int[] chunk = new int[matrixKey.n];
+            for (int j = 0; j < matrixKey.n; j++)
             {
                 chunk[j] = original[i + j] - 'A';
             }
 
-            int[] newChunk = new int[n];
+            int[] newChunk = new int[matrixKey.n];
 
-            for (int row = 0; row < n; row++)
+            for (int row = 0; row < matrixKey.n; row++)
             {
-                for (int col = 0; col < n; col++)
+                for (int col = 0; col < matrixKey.n; col++)
                 {
-                    newChunk[row] += (matrixKey[row, col] * chunk[col]);
+                    newChunk[row] += (matrixKey.element(row, col) * chunk[col]);
                 }
                 result += (char)(newChunk[row] %26 + 'A');
 
             }
         }
 
-        if(encrypt)
+        if (!encrypt)
         {
-            plaintext = original;
-            ciphertext = result;
+            ciphertext = original.ToUpper();
+            plaintext = result.ToUpper();
         }
         else
         {
-            plaintext = result;
-            ciphertext = original;
+            ciphertext = result.ToUpper();
+            plaintext = original.ToUpper();
         }
 
     }
 
-    private int[,] inverse(int[,] matrix)
-    {
-        int n = (int)Math.Sqrt(matrix.Length);
-        int[,] inverse = new int[n, n];
-
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                //CALCULATE MINOR//
-                int[,] minors = calculateMinors(matrix, i, j);
-
-                inverse[j, i] = (int)Math.Pow((-1), i + j) * det(minors);//CALCULATE COFACTORS AND TRANSPOSE
-            }
-        }
-
-        int determinant = det(matrix);
-        ////calculate Modular multiplicative inverse of determinant
-        int d = 0; //Modular multiplicative inverse
-        int x = 1;
-        while (d == 0 && x < determinant)
-        {
-            if (determinant * x % 26 == 1)
-            {
-                d = x;
-            }
-            x++;
-        }
-
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                inverse[i, j] *= d;
-                inverse[i, j] %= 26;
-                if (inverse[i, j] < 0)
-                {
-                    inverse[i, j] += 26;
-                }
-            }
-        }
-
-        return inverse;
-    }
-
-    private int det(int[,] matrix)
-    {
-        int d = 0;
-        if (matrix.Length > 1)
-        {
-            for (int i = 0; i < Math.Sqrt(matrix.Length); i++)
-            {
-                d += (int)(matrix[i, 0] * Math.Pow(-1, i) * det(calculateMinors(matrix, i, 0)));
-            }
-        }
-        else
-        {
-            d = matrix[0, 0];
-        }
-
-        return d;
-    }
 
 
-    private int[,] calculateMinors(int[,] matrix, int i, int j)
-    {
-        int n = (int)Math.Sqrt(matrix.Length);
-        int[,] minors = new int[n - 1, n - 1];
-        int x = 0;
-
-        for (int mi = 0; mi < n; mi++)
-        {
-            if (mi != i)
-            {
-                int y = 0;
-                for (int mj = 0; mj < n; mj++)
-                {
-                    if (mj != j)
-                    {
-                        minors[x, y] = matrix[mi, mj];
-                        y++;
-                    }
-                }
-                x++;
-            }
-        }
-        return minors;
-    }
 }
