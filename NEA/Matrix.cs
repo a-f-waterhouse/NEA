@@ -16,7 +16,7 @@ namespace NEA
         public Matrix(string m)
         {
             n = (int)Math.Sqrt(m.Length);
-            matrix = new int[n, n]; //set up matrix key
+            matrix = new int[n, n];
             for (int i = 0; i < m.Length; i++)
             {
                 matrix[i / n, i % n] = m[i]-'A';
@@ -81,15 +81,12 @@ namespace NEA
             {
                 for (int j = 0; j < n; j++)
                 {
-                    //CALCULATE MINOR//
-                    Matrix minors = calculateMinors( i, j);
-
-                    inverse[j, i] = (int)Math.Pow((-1), i + j) * minors.det();//CALCULATE COFACTORS AND TRANSPOSE
+                    Matrix minors = calculateMinors(i, j);
+                    inverse[j, i] = (int)Math.Pow((-1), i + j) * minors.det();
                 }
             }
-            int determinant = det();
-            ////calculate Modular multiplicative inverse of determinant
-            int d = CipherMathsFunctions.modularMutiplicativeInverse(determinant, 26);
+
+            int d = CipherMathsFunctions.modularMutiplicativeInverse(det(), 26);
 
             for (int i = 0; i < n; i++)
             {
