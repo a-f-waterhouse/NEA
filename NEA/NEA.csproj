@@ -6,4 +6,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Assets\1.gif" />
+    <None Include="wwwroot\Assets\2.gif" />
+    <None Include="wwwroot\Assets\3.gif" />
+    <None Include="wwwroot\Assets\4.gif" />
+    <None Include="wwwroot\Assets\5.gif" />
+    <None Include="wwwroot\Assets\frog.gif" />
+    <None Include="wwwroot\Assets\gilbertbakergay.gif" />
+    <None Include="wwwroot\Assets\head.gif" />
+    <None Include="wwwroot\Assets\ichangemylayoutfrequently.gif" />
+    <None Include="wwwroot\Assets\i_glow_in_the_dark.gif" />
+    <None Include="wwwroot\Assets\lemondemon.gif" />
+    <None Include="wwwroot\Assets\nohotlinking.gif" />
+    <None Include="wwwroot\Assets\noterfs.gif" />
+    <None Include="wwwroot\Assets\pacman.gif" />
+    <None Include="wwwroot\Assets\trains.gif" />
+    <None Include="wwwroot\Assets\work.gif" />
+  </ItemGroup>
+
 </Project>

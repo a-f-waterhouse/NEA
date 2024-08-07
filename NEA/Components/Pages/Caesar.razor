@@ -5,18 +5,28 @@
 
 <h1>Caesar Cipher</h1>
 
-<p>Plaintext: </p>
-<textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
-<br>
-<p>Ciphertext: </p>
-<textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
-<br>
-<p>Enter key: </p>
-<textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+<div class = "boxes">
+    <div class = "box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Enter key: </p>
+        <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+    </div>  
+    
+
+</div>
 <br />
 <button @onclick="caesar">SUBMIT</button>
 <br />
 <input type="checkbox" @bind=encrypt>
+
+
 
 <p>@errors</p>
 
@@ -29,7 +39,7 @@
 
     private void caesar()
     {
-        abcdefg();
+       
         plaintext = plaintext.ToLower();
         ciphertext = ciphertext.ToLower();
         if (encrypt)

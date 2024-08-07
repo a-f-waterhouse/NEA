@@ -53,9 +53,38 @@ a{
     color: black;
 }
 
+.boxes {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+}
+
+.box{
+    
+}
+
 main {
     border: solid yellow;
     padding: 2%;
     width: 100%;
     margin-left: 2%;
+}
+
+
+
+
+#blinkiesJail {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.blinkie
+{
+    margin: 1%;
+    display: block;
+    width: 150px;
+    height: 20px;
 }
