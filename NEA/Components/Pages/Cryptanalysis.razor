@@ -2,10 +2,20 @@
 
 <h3>Cryptanalysis</h3>
 <textarea class="submission" @bind=input @bind:event="oninput"></textarea>
+<div id="flexBox">
+    <div class="stat">
+        <b>Index Of Coincidence: <span>@indexOfCoincidence</span></b>
+        <p>index of coincidence in English = 0.0667, random = 0.0385, closer to random it is, the more alphabets used.</p>
+    </div>
+    <div class="stat">
+        Index Of Coincidence:
+        <span>@indexOfCoincidence</span>
+    </div>
+</div>
 
 @code {
     private string input = "";
-    
+    private double indexOfCoincidence = 0;
 
     
 }

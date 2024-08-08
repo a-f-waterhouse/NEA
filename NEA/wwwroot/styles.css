@@ -74,17 +74,24 @@ main {
 
 
 
-#blinkiesJail {
+#flexBox {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-around;
 }
 
-.blinkie
-{
-    margin: 1%;
+.blinkie {
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    margin-top: 0.5%;
     display: block;
     width: 150px;
     height: 20px;
+}
+
+.stat {
+    width: 25%;
+    margin: 1%;
+    border: solid white;
 }
