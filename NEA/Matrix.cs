@@ -82,11 +82,11 @@ namespace NEA
                 for (int j = 0; j < n; j++)
                 {
                     Matrix minors = calculateMinors(i, j);
-                    inverse[j, i] = (int)Math.Pow((-1), i + j) * minors.det();
+                    inverse[j, i] = (int)Math.Pow((-1), i + j) * minors.det(); //aa
                 }
             }
 
-            int d = CipherMathsFunctions.modularMutiplicativeInverse(det(), 26);
+            int d = CipherMathsFunctions.modularMultiplicativeInverse(det(), 26);
 
             for (int i = 0; i < n; i++)
             {

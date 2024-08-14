@@ -2,7 +2,7 @@
 {
     public class CipherMathsFunctions
     {
-        public static int modularMutiplicativeInverse(int a, int m)
+        public static int modularMultiplicativeInverse(int a, int m)
         {
             for (int i = 1; i < m; i++)
             {
