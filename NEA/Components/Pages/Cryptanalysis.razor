@@ -1,21 +1,85 @@
 ﻿@page "/cryptanalysis"
+@rendermode InteractiveServer
 
 <h3>Cryptanalysis</h3>
 <textarea class="submission" @bind=input @bind:event="oninput"></textarea>
-<div id="flexBox">
+
+<button @onclick="submit">EEEEEE</button>
+
+<div class="flexBox">
     <div class="stat">
-        <b>Index Of Coincidence: <span>@indexOfCoincidence</span></b>
+        <b>Index Of Coincidence: <span>@ioc</span></b>
         <p>index of coincidence in English = 0.0667, random = 0.0385, closer to random it is, the more alphabets used.</p>
     </div>
     <div class="stat">
-        Index Of Coincidence:
-        <span>@indexOfCoincidence</span>
+        <b>Chi-squared Statistic:</b>
+        <span>@chisquared</span>
+        <p>Tests how closely the values are the the expected frequencies</p>
+    </div>
+    <div class="stat">
+        <BarChart @ref="barChart" Width="400" Height="500" />
     </div>
 </div>
 
-@code {
-    private string input = "";
-    private double indexOfCoincidence = 0;
 
-    
+@code {
+
+    private string input = "";
+    private double ioc = 0;
+    private double chisquared = 0;
+
+    private BarChart barChart = default!;
+    private BarChartOptions barChartOptions = default!;
+    private ChartData chartData = default!;
+
+
+    private double[] frequencies = CryptanalysisFunctions.MonogramFrequencies();
+    private double[] expected = new double[26];
+    private int[] actual = new int[26];
+
+    private async void submit()
+    {
+        for (int i = 0; i < 26; i++)
+        {
+            actual[i] = 0;
+            expected[i] = 0;
+        }
+
+        int length = 0;
+        foreach (char c in input)
+        {
+            if (c - 97 < 26 && c - 97 >= 0)
+            {
+                actual[c - 97]++;
+                length++;
+            }
+        }
+        for (int i = 0; i < 26; i++)
+        {
+            expected[i] = length * frequencies[i];
+        }
+        
+
+        ioc = CryptanalysisFunctions.indexOfCoincidence(actual);
+        chisquared = CryptanalysisFunctions.X2Stat(actual);
+
+        var alphabets = new List<IChartDataset>();
+        alphabets.Add(new BarChartDataset() { Label = "Expected", Data = expected.ToList().Select(Convert.ToDouble).ToList() });
+        alphabets.Add(new BarChartDataset() { Label = "Actual", Data = actual.ToList().Select(Convert.ToDouble).ToList() });        
+
+        chartData.Datasets = alphabets;
+
+        await barChart.InitializeAsync(chartData, barChartOptions);
+        await barChart.UpdateAsync(chartData, barChartOptions);       
+
+    }
+
+    protected override void OnInitialized()
+    {
+        string[] alphabet = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+        chartData = new ChartData { Labels = alphabet.ToList(), Datasets = new List<IChartDataset>() };
+
+    }
+ 
+
 }

@@ -1,14 +1,15 @@
 ﻿@page "/ciphers"
 
 <h3>Ciphers</h3>
+@foreach (string filePath in Directory.GetFiles(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Components/Pages/CipherPages")))
+{
+    FileInfo fI = new FileInfo(filePath);
+    string c = fI.Name.Split('.')[0];    
+    <NavLink href="@c">
+        <div class="cipherLink">@c</div>
+    </NavLink>
 
-<NavLink href="hill">
-    <div class="cipherLink">HILL</div>
-</NavLink>
-
-<NavLink href="caesar">
-    <div class="cipherLink">CAESAR</div>
-</NavLink>
+}
 
 @code {
 

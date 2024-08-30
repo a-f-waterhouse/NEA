@@ -25,4 +25,8 @@
     <None Include="wwwroot\Assets\work.gif" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="2.2.0" />
+  </ItemGroup>
+
 </Project>

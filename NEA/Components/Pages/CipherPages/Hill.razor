@@ -17,7 +17,7 @@
 
 <input type="checkbox" @bind=encrypt>
 
-<button @onclick="Hill">SUBMIT</button>
+<button @onclick="HillEncrypt">SUBMIT</button>
 <br />
 <p>@error</p>
 
@@ -29,7 +29,7 @@
     private bool encrypt;
 
 
-    private void Hill()
+    private void HillEncrypt()
     {
         Matrix matrixKey = new Matrix(key.ToUpper());
         string original;

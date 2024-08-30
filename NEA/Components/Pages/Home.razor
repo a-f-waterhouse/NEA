@@ -2,15 +2,16 @@
 
 <PageTitle>Home</PageTitle>
 
+
 <h1>Hello, world!!!!</h1>
 
-<div id="flexBox">
+<div class="flexBox">
     
     @foreach (string filePath in Directory.GetFiles(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/Assets")))
     {
         FileInfo fI = new FileInfo(filePath);
         string image = "Assets/" + fI.Name;        
-        <img class="blinkie" src=@image />
+        <img id="blinkie" src=@image />
     }
 
 </div>

@@ -13,14 +13,19 @@ namespace Cryptanalysis
         {
             int[] frequencies = new int[26];
             foreach (char c in C)
-            {                 
-                frequencies[c - 97]++;                
+            {
+                if (c - 97 < 26 && c - 97 >= 0)
+                {
+                    frequencies[c - 97]++;
+                }
             }
-            int a = 0;
+            double a = 0;
             foreach (int f in frequencies)
             {                
                 a += f * (f - 1);
-            }            
+                Console.WriteLine(a);
+            }
+            Console.WriteLine((C.Length * (C.Length - 1)));
             return a / (C.Length * (C.Length - 1));
         }
 
@@ -37,9 +42,22 @@ namespace Cryptanalysis
             return X;
         } //measurement of how closely a data set matches expected values, smaller is better
 
+
+
+
         static void Main(string[] args)
         {
-
+            string C = "abcdasdfghjkl;fdnksv :) hhhh";
+            int[] frequencies = new int[26];
+            foreach (char c in C)
+            {
+                if (c - 97 < 26 && c - 97 >= 0)
+                {
+                    frequencies[c - 97]++;
+                }
+            }
+            Console.WriteLine(X2Stat(frequencies, C.Length));
+            Console.ReadLine();
 
         }
     }
