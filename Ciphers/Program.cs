@@ -205,9 +205,41 @@ namespace Ciphers
             return output;
         }
 
+        static string SubstitutionEncryptDecrypt(string plaintext, Dictionary<char,char> key)
+        {
+            string output = "";
+            foreach (char c in plaintext)
+            {
+                if(c >= 'a' && c <= 'z')
+                {
+                    output += key[c];
+                }
+                else
+                {
+                    output += c;
+                }
+            }
+            return output;
+        }
 
         static void Main(string[] args)
         {
+            string plaintext = "hello";
+            string key = "anamazingkey";
+
+            Dictionary<char,char> keyPairs = new Dictionary<char,char>();
+            Dictionary<char, char> reverseKeyPairs = new Dictionary<char, char>();
+
+            for (int i = 0; i < key.Length; i++)
+            {
+                reverseKeyPairs.Add(key[i], (char)(i + 97));
+                keyPairs.Add((char)(i + 97), key[i]);                 
+            }
+            for (int i = key.Length; i < 26; i++)
+            {
+                keyPairs.Add((char)(i+97),  ) 
+            }
+
             while(true)
             {
                 Console.Write("Input text: ");

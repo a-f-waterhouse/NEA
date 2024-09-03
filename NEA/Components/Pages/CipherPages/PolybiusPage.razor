@@ -1,0 +1,54 @@
+﻿@page "/PolybiusPage"
+@rendermode InteractiveServer
+
+<h1>Polybius</h1>
+
+<div class="boxes">
+    <div class="box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key: </p>
+        <textarea class="submission" @bind=keyInput @bind:event="oninput"></textarea>
+    </div>
+
+</div>
+
+<button @onclick="encryptButton">ENCRYPT</button>
+<button @onclick="decryptButton">DECRYPT</button>
+
+
+@code {
+    string plaintext = "";
+    string keyInput = "";
+    char[,] key = new char[5,5];
+    string ciphertext = "";
+
+    void getkey()
+    {
+        keyInput = keyInput.ToLower();
+        for (int i = 0; i < 25; i++)
+        {
+            key[i % 5, i / 5] = keyInput[i];
+        }
+    }
+
+    void encryptButton()
+    {
+        getkey();
+        plaintext = plaintext.ToLower();
+        ciphertext = Polybius.Encrypt(plaintext, key);
+    }
+
+    void decryptButton()
+    {
+        getkey();
+        ciphertext = ciphertext.ToLower();
+        plaintext = Polybius.Decrypt(ciphertext, key);
+    }
+}

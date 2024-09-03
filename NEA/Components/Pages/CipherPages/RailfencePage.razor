@@ -1,0 +1,50 @@
+﻿@page "/RailfencePage"
+@rendermode InteractiveServer
+
+<h1>Railfence</h1>
+
+<div class="boxes">
+    <div class="box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key: </p>
+        <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+    </div>
+
+</div>
+
+<button @onclick="encryptButton">ENCRYPT</button>
+<button @onclick="decryptButton">DECRYPT</button>
+<button @onclick="Bruteforce">BRUTEFORCE</button>
+
+
+@code {
+    string plaintext = "";
+    int key = 0;
+    string ciphertext = "";
+
+    void encryptButton()
+    {
+        plaintext = plaintext.ToLower();
+        ciphertext = Railfence.Encrypt(plaintext, key);
+    }
+
+    void decryptButton()
+    {
+        ciphertext = ciphertext.ToLower();
+        plaintext = Railfence.Decrypt(ciphertext, key);
+    }
+    void Bruteforce()
+    {
+        for (int i = 1; i < plaintext.Length; i++)
+        {
+        }
+    }
+
+}

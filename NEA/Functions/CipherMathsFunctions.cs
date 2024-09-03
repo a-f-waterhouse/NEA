@@ -2,6 +2,16 @@
 {
     public class CipherMathsFunctions
     {
+        public static bool isLetter(char c)
+        {
+            if(c >= 'a' && c <= 'z')
+            {
+                return true;
+            }
+            return false;
+        }
+
+
         public static int modularMultiplicativeInverse(int a, int m)
         {
             for (int i = 1; i < m; i++)

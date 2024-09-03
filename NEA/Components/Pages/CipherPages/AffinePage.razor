@@ -1,0 +1,76 @@
+﻿@page "/AffinePage"
+@rendermode InteractiveServer
+
+<h1>Affine Cipher</h1>
+
+
+<div class = "boxes">
+    <div class = "box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key (A): </p>
+        <textarea class="submission" @bind=A @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key (B): </p>
+        <textarea class="submission" @bind=B @bind:event="oninput"></textarea>
+    </div>
+</div>
+<button @onclick="encryptButton">ENCRYPT</button>
+<button @onclick="decryptButton">DECRYPT</button>
+<br />
+<br />
+<button @onclick="Bruteforce">BRUTEFORCE</button>
+
+@code {
+    string plaintext = "";
+    int A = 0;
+    int B = 0;
+    string ciphertext = "";
+
+    void encryptButton()
+    {
+        plaintext = plaintext.ToLower();
+        ciphertext = Affine.Encrypt(A, B, plaintext);
+    }
+
+    void decryptButton()
+    {
+        ciphertext = ciphertext.ToLower();
+        plaintext = Affine.Decrypt(A, B, ciphertext);
+    }
+
+    void Bruteforce()
+    {        
+        double[,] fitness = new double[13,26];
+
+        double Min = 1000000;
+        int aMin =0, bMin=0;
+
+        for (int a = 1; a < 26; a+=2)
+        {
+            for (int b = 0; b < 26; b++)
+            {
+                fitness[a/2,b] = CryptanalysisFunctions.X2Stat(CryptanalysisFunctions.CalculateLetterFrequencies((Affine.Decrypt(a, b, ciphertext))));
+                if(fitness[a/2,b] < Min)
+                {
+                    Min = fitness[a/2, b];
+                    aMin = a;
+                    bMin = b;
+                }
+            }
+        }
+        plaintext = Affine.Decrypt(aMin, bMin, ciphertext);
+        A = aMin;
+        B = bMin;
+
+        
+    }
+
+}

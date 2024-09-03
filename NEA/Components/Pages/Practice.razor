@@ -7,11 +7,34 @@ For hints (which may be necessary for some problems), click the hint button, whi
 
 To check your answer, type it into the answer box and press submit.<br />
 
+<div class="flexbox">
+    <div class="stat">
+        <h6>Individual Ciphers</h6>
+        <input type="radio" name="cipher">Caesar
+        <br />
+        <input type="radio" name="cipher">Vigenere
+        <br />
+        <input type="radio" name="cipher">Hill
+        <br />
+    </div>
+
+</div>
+
 <textarea></textarea>
 <button>SUBMIT</button>
 
+<p>@test</p>
+
 
 @code {
+    string test = "";
+
+    string getSampleText()
+    {
+        Random rnd = new Random();
+        string[] paragraphs = File.ReadAllLines(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/sampleText.txt"));
+        return paragraphs[rnd.Next(1, paragraphs.Length)];
+    }
 
 
 }

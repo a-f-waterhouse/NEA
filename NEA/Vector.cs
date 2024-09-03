@@ -6,14 +6,14 @@ namespace NEA
 {
     public class Vector
     {
-        private int[] vector;
+        private double [] vector;
 
-        public Vector(int[] inV)
+        public Vector(double[] inV)
         {
             vector = inV;
         }
 
-        public int Element(int i)
+        public double Element(int i)
         {
             return vector[i];
         }

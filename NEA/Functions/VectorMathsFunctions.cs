@@ -2,9 +2,9 @@
 {
     public class VectorMathsFunctions
     {
-        public static int DotProduct(Vector a, Vector b)
+        public static double DotProduct(Vector a, Vector b)
         {
-            int total = 0;
+            double total = 0;
             for (int i = 0; i < a.Dimension(); i++)
             {
                 total += a.Element(i) * b.Element(i);
@@ -14,7 +14,7 @@
 
         public static double angle(Vector a, Vector b)
         {
-            return DotProduct(a, b) / (a.Magnitude() * b.Magnitude());
+            return (DotProduct(a, b) / Math.Sqrt(a.Magnitude() * b.Magnitude()));
         }
 
     }

@@ -1,0 +1,88 @@
+﻿@page "/caesarpage"
+@rendermode InteractiveServer
+
+<PageTitle>Caesar</PageTitle>
+
+<h1>Caesar Cipher</h1>
+
+<div class = "boxes">
+    <div class = "box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key: </p>
+        <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+    </div> 
+
+</div>
+<br />
+<button @onclick="encryptButton">ENCRYPT</button>
+<button @onclick="decryptButton">DECRYPT</button>
+<br />
+<br/>
+Bruteforcing involves decrypting with every single possible key (1-25) and then testing the fitness of the result using a Chi-Squared test. The one with the lowest Chi-Squared value has the best fitness and so is applied. This may not always be accurate, so you could use the graph to try some other keys which produce low values.
+<button @onclick="Bruteforce">BRUTEFORCE</button>
+<BarChart @ref="barChart" Width="400" Height="500" />
+
+
+@code {
+    string plaintext = "";
+    int key = 0;
+    string ciphertext = "";
+
+    BarChart barChart = default!;
+    BarChartOptions barChartOptions = default!;
+    ChartData chartData = default!;
+
+    void encryptButton()
+    {
+        ciphertext = Caesar.Encrypt(plaintext, key);
+    }
+
+    void decryptButton()
+    {
+        plaintext = Caesar.Decrypt(ciphertext, key);
+    }
+
+    async void Bruteforce()
+    {
+        plaintext = "";
+        double[] fitness = new double[25];
+        for (int i = 1; i < fitness.Length+1; i++)
+        {
+            fitness[i - 1] = CryptanalysisFunctions.X2Stat(CryptanalysisFunctions.CalculateLetterFrequencies((Caesar.Decrypt(ciphertext, i))));
+        }
+        plaintext = Caesar.Decrypt(ciphertext, Array.IndexOf(fitness, fitness.Min())+1);
+
+
+        var datasets = new List<IChartDataset>();
+        datasets.Add(new BarChartDataset() { Label = "Chi-Squared", Data = fitness.ToList() });        
+
+        chartData.Datasets = datasets;
+
+        await barChart.InitializeAsync(chartData, barChartOptions);
+        await barChart.UpdateAsync(chartData, barChartOptions);
+
+    }
+
+    protected override void OnInitialized()
+    {
+        List<string> numbers = new List<string>();
+        for (int i = 1; i < 26; i++)
+        {
+            numbers.Add(i.ToString());
+        }
+        chartData = new ChartData { Labels = numbers, Datasets = new List<IChartDataset>() };
+
+    }
+
+
+
+}
+
+
