@@ -1,5 +1,36 @@
-﻿<h3>Baconian</h3>
+﻿@page "/BaconianPage"
+@rendermode InteractiveServer
+
+<h1>Baconian Cipher</h1>
+
+
+<div class="boxes">
+    <div class="box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+</div>
+<button @onclick="encryptButton">ENCRYPT</button>
+<button @onclick="decryptButton">DECRYPT</button>
 
 @code {
+    string plaintext = "";
+    string ciphertext = "";
 
+    void encryptButton()
+    {
+        plaintext = plaintext.ToLower();
+        ciphertext = Baconian.Encrypt(plaintext);
+    }
+
+    void decryptButton()
+    {
+        ciphertext = ciphertext.ToLower();
+        plaintext = Baconian.Decrypt(ciphertext);
+    }
 }
+
