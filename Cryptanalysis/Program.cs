@@ -43,20 +43,12 @@ namespace Cryptanalysis
         } //measurement of how closely a data set matches expected values, smaller is better
 
 
-
-
         static void Main(string[] args)
         {
-            string C = "abcdasdfghjkl;fdnksv :) hhhh";
-            int[] frequencies = new int[26];
-            foreach (char c in C)
-            {
-                if (c - 97 < 26 && c - 97 >= 0)
-                {
-                    frequencies[c - 97]++;
-                }
-            }
-            Console.WriteLine(X2Stat(frequencies, C.Length));
+            double[] a = { 0, 1 };
+            double[] b = { 2, 3 };
+
+            Console.WriteLine(VectorMathsFunctions.Angle(new Vector(a), new Vector(b)));
             Console.ReadLine();
 
         }

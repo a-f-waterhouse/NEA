@@ -21,8 +21,7 @@
 <button @onclick="encryptButton">ENCRYPT</button>
 <button @onclick="decryptButton">DECRYPT</button>
 <br />
-<br />
-<button @onclick="Bruteforce">BRUTEFORCE</button>
+
 
 @code {
     string plaintext = "";
@@ -33,17 +32,17 @@
 
     void encryptButton()
     {
-        plaintext = plaintext.ToLower();
-        Substitution.getKey(key, encrytptionMap, decryptionMap);
-        ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
+        //plaintext = plaintext.ToLower();
+        //Substitution.getKey(key, encrytptionMap, decryptionMap);
+        //ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
     }
 
     void decryptButton()
     {
-        plaintext = plaintext.ToLower();
-        Substitution.getKey(key, encrytptionMap, decryptionMap);
-        ciphertext = ciphertext.ToLower();
-        plaintext = Substitution.MapCharacters(ciphertext, decryptionMap);
+        //plaintext = plaintext.ToLower();
+        //Substitution.getKey(key, encrytptionMap, decryptionMap);
+        //ciphertext = ciphertext.ToLower();
+        //plaintext = Substitution.MapCharacters(ciphertext, decryptionMap);
     }
 
 }
