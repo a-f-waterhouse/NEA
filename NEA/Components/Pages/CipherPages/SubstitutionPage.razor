@@ -23,6 +23,7 @@
 <br />
 <br />
 
+
 @code {
     string plaintext = "";
     string key = "";
@@ -33,14 +34,15 @@
     void encryptButton()
     {
         plaintext = plaintext.ToLower();
-        Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
+        Substitution.getKey(key, encrytptionMap, decryptionMap);
         ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
     }
 
     void decryptButton()
     {
+        plaintext = plaintext.ToLower();
+        Substitution.getKey(key, encrytptionMap, decryptionMap);
         ciphertext = ciphertext.ToLower();
-        Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
         plaintext = Substitution.MapCharacters(ciphertext, decryptionMap);
     }
 

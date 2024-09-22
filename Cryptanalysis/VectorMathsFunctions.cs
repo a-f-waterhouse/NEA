@@ -1,4 +1,10 @@
-﻿namespace NEA
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Cryptanalysis
 {
     public class VectorMathsFunctions
     {
@@ -12,7 +18,7 @@
             return total;
         }
 
-        public static double Angle(Vector a, Vector b) //radians
+        public static double Angle(Vector a, Vector b)
         {
             return Math.Acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
         }
