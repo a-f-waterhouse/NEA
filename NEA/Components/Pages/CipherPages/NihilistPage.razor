@@ -1,5 +1,60 @@
-﻿<h3>NihilistPage</h3>
+﻿@page "/NihilistPage"
+@rendermode InteractiveServer
+
+<h1>Nihilist</h1>
+
+<div class="boxes">
+    <div class="box">
+        <p>Plaintext: </p>
+        <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Ciphertext: </p>
+        <textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key (grid): </p>
+        <textarea class="submission" @bind=gridKeyInput @bind:event="oninput"></textarea>
+    </div>
+    <div class="box">
+        <p>Key: </p>
+        <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+    </div>
+
+</div>
+
+<button @onclick="encryptButton">ENCRYPT</button>
+<button @onclick="decryptButton">DECRYPT</button>
+
 
 @code {
+    string plaintext = "";
+    string gridKeyInput = "";
+    string key = "";
+    char[,] gridKey = new char[5, 5];
+    string ciphertext = "";
 
+    void getkey()
+    {
+        key = key.ToLower();
+        gridKeyInput = gridKeyInput.ToLower();
+        for (int i = 0; i < 25; i++)
+        {
+            gridKey[i % 5, i / 5] = gridKeyInput[i];
+        }
+    }
+
+    void encryptButton()
+    {
+        getkey();
+        plaintext = plaintext.ToLower();
+        ciphertext = Nihilist.Encrypt(plaintext, gridKey, key);
+    }
+
+    void decryptButton()
+    {
+        getkey();
+        ciphertext = ciphertext.ToLower();
+        plaintext = Nihilist.Decrypt(ciphertext, gridKey, key);
+    }
 }

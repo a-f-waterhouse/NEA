@@ -218,6 +218,9 @@ namespace Ciphers
                         break;
 
                 }
+
+                Console.WriteLine();
+
             }
 
             

@@ -1,0 +1,36 @@
+﻿@page "/vigenerePage"
+@rendermode InteractiveServer
+
+<PageTitle>Vigenere</PageTitle>
+
+<h1>Vigenere</h1>
+
+<p>Plaintext: </p>
+<textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+<br>
+<p>Ciphertext: </p>
+<textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+<br>
+<p>Enter key: </p>
+<textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+<br />
+<button @onclick="Encrypt">ENCRYPT</button>
+<button @onclick="Decrypt">DECRYPT</button>
+<br />
+
+@code {
+    string plaintext = "";
+    string key = "";
+    string ciphertext = "";
+
+    void Encrypt()
+    {
+        ciphertext = Vigenere.Encrypt(plaintext, key);
+    }
+
+    void Decrypt()
+    {
+        plaintext = Vigenere.Decrypt(ciphertext, key);
+    }
+
+}

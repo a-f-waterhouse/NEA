@@ -1,12 +1,43 @@
-﻿using System.Diagnostics.Eventing.Reader;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 
-namespace NEA
+namespace Hill_Climbing
 {
     public static class CryptanalysisFunctions
     {
+        public static double BigramFitness(string text)
+        {
+            double total = 0;
+
+            Dictionary<string, double> bigrams = new Dictionary<string, double>();
+            using (StreamReader sr = new StreamReader("bigramFrequencies.txt"))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string[] line = sr.ReadLine().Split(' ');
+                    bigrams.Add(line[0], Math.Log10(double.Parse(line[1])));
+                }
+            }
+
+            for (int i = 0; i < text.Length - 1; i++)
+            {
+                if (CipherMathsFunctions.isLetter(text[i]) && CipherMathsFunctions.isLetter(text[i + 1]))
+                {
+                    total += bigrams[(text[i] + text[i + 1].ToString()).ToUpper()];
+                }
+            }
+            return total;
+        }
+
+
+
         public static double[] MonogramFrequencies()
         {
-            return File.ReadAllText(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/monogramFrequencies.txt")).Split(' ').Select(double.Parse).ToArray();
+            return File.ReadAllText( "monogramFrequencies.txt").Split(' ').Select(double.Parse).ToArray();
         }
 
         public static int[] CalculateLetterFrequencies(string input)
@@ -29,7 +60,7 @@ namespace NEA
             {
                 if(CipherMathsFunctions.isLetter(input[i])&& CipherMathsFunctions.isLetter(input[i+1]))
                 {
-                    string bigram = input[i].ToString() + input[i + 1].ToString();
+                    string bigram = input[i].ToString() + input[i + 1];
                     if (!frequencies.ContainsKey(bigram))
                     {
                         frequencies.Add(bigram, 1);
@@ -83,20 +114,6 @@ namespace NEA
             return X;
         }
 
-        public static double VectorAngles(int[] CipherText)
-        {
-            double[] expected = new double[26];
-            int length = 0;
-            foreach (int c in CipherText)
-            {
-                length += c;
-            }
-            for (int i = 0; i < 26; i++)
-            {
-                expected[i] = length * (MonogramFrequencies()[i]);
-            }
-            return VectorMathsFunctions.angle(new Vector(CipherText.Select(Convert.ToDouble).ToArray()), new Vector(expected));
-        } ///EEEEEEEEEE
 
         public static double ShannonEntropy(int[] Ciphertext)
         {
@@ -110,7 +127,7 @@ namespace NEA
             foreach (int c in Ciphertext)
             {
                 double frequency = c / length;
-                entropy -= (frequency * Math.Log2(frequency));
+                entropy -= (frequency * Math.Log(frequency, 2));
             }
 
             return entropy;

@@ -43,7 +43,27 @@ namespace Cryptanalysis
         } //measurement of how closely a data set matches expected values, smaller is better
 
 
+        public static double ShanonEntropy(int[] Ciphertext)
+        {
+            double entropy = 0;
+            int length = 0;
+            for (int i = 0; i < Ciphertext.Length; i++)
+            {
+                length += Ciphertext[i];
+            }
 
+            foreach (int c in Ciphertext)
+            {
+                double frequency = (double)c / length;
+                if(frequency!= 0)
+                {
+                    entropy -= (frequency * Math.Log(frequency, 2));
+                }                
+                Console.WriteLine(entropy + " " + frequency);
+            }
+
+            return entropy;
+        }
 
         static void Main(string[] args)
         {
@@ -56,7 +76,7 @@ namespace Cryptanalysis
                     frequencies[c - 97]++;
                 }
             }
-            Console.WriteLine(X2Stat(frequencies, C.Length));
+            Console.WriteLine(ShanonEntropy(frequencies));
             Console.ReadLine();
 
         }

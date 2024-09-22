@@ -22,6 +22,11 @@
         <p>rahhhh</p>
     </div>
     <div class="stat">
+        <b>Shanonnon Entropy</b>
+        <span>@entropy</span>
+        <p>The expected value is around 4.16</p>
+    </div>
+    <div class="stat">
         <BarChart @ref="barChart" Width="400" Height="500" />
     </div>
 </div>
@@ -29,21 +34,22 @@
 
 @code {
 
-    private string input = "";
-    private double ioc = 0;
-    private double chisquared = 0;
-    private double angles = 0;
+    string input = "";
+    double ioc = 0;
+    double chisquared = 0;
+    double angles = 0;
+    double entropy = 0;
 
-    private BarChart barChart = default!;
-    private BarChartOptions barChartOptions = default!;
-    private ChartData chartData = default!;
+    BarChart barChart = default!;
+    BarChartOptions barChartOptions = default!;
+    ChartData chartData = default!;
 
 
-    private double[] frequencies = CryptanalysisFunctions.MonogramFrequencies();
-    private double[] expected = new double[26];
-    private int[] actual = new int[26];
+    double[] frequencies = CryptanalysisFunctions.MonogramFrequencies();
+    double[] expected = new double[26];
+    int[] actual = new int[26];
 
-    private async void submit()
+    async void submit()
     {
         for (int i = 0; i < 26; i++)
         {
@@ -64,11 +70,12 @@
         {
             expected[i] = length * frequencies[i];
         }
-        
+
 
         ioc = CryptanalysisFunctions.indexOfCoincidence(actual);
         chisquared = CryptanalysisFunctions.X2Stat(actual);
         angles = CryptanalysisFunctions.VectorAngles(actual);
+        entropy = CryptanalysisFunctions.ShannonEntropy(actual);
 
         var alphabets = new List<IChartDataset>();
         alphabets.Add(new BarChartDataset() { Label = "Expected", Data = expected.ToList().Select(Convert.ToDouble).ToList() });

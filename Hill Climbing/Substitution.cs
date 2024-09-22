@@ -1,4 +1,10 @@
-﻿namespace NEA
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+namespace Hill_Climbing
 {
     public static class Substitution
     {
@@ -13,6 +19,7 @@
                     key += (char)(i + 97);
                 }
             }
+            Console.WriteLine(key);
 
             for (int i = 0; i < 26; i++)
             {

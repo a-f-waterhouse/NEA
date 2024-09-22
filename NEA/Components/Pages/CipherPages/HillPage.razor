@@ -1,0 +1,36 @@
+﻿@page "/hillPage"
+@rendermode InteractiveServer
+
+<PageTitle>Hill</PageTitle>
+
+<h1>Hill Cipher</h1>
+
+<p>Plaintext: </p>
+<textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
+<br>
+<p>Ciphertext: </p>
+<textarea class="submission" @bind=ciphertext @bind:event="oninput"></textarea>
+<br>
+<p>Enter key: </p>
+<textarea class="submission" @bind=key @bind:event="oninput"></textarea>
+<br />
+<button @onclick="Encrypt">ENCRYPT</button>
+<button @onclick="Decrypt">DECRYPT</button>
+<br />
+
+@code {
+    string plaintext = "";
+    string key = "";
+    string ciphertext = "";
+
+    void Encrypt()
+    {
+        ciphertext = Hill.Encrypt(plaintext, key);
+    }
+
+    void Decrypt()
+    {
+        plaintext = Hill.Decrypt(ciphertext, key);
+    }
+
+}

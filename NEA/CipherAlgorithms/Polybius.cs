@@ -25,10 +25,6 @@
                         }
                     }
                 }
-                else
-                {
-                    output += c;
-                }
 
             }
             return output;
