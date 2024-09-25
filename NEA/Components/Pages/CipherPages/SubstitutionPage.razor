@@ -34,14 +34,14 @@
     void encryptButton()
     {
         plaintext = plaintext.ToLower();
-        Substitution.getKey(key, encrytptionMap, decryptionMap);
+        Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
         ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
     }
 
     void decryptButton()
     {
         plaintext = plaintext.ToLower();
-        Substitution.getKey(key, encrytptionMap, decryptionMap);
+        Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
         ciphertext = ciphertext.ToLower();
         plaintext = Substitution.MapCharacters(ciphertext, decryptionMap);
     }

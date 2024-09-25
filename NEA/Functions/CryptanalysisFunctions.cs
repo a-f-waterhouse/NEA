@@ -11,6 +11,7 @@ namespace NEA
 
         public static int[] CalculateLetterFrequencies(string input)
         {
+            input = input.ToLower();
             int[] f = new int[26];
             foreach (char c in input)
             {
@@ -95,7 +96,7 @@ namespace NEA
             {
                 expected[i] = length * (MonogramFrequencies()[i]);
             }
-            return VectorMathsFunctions.angle(new Vector(CipherText.Select(Convert.ToDouble).ToArray()), new Vector(expected));
+            return VectorMathsFunctions.Angle(new Vector(CipherText.Select(Convert.ToDouble).ToArray()), new Vector(expected));
         } ///EEEEEEEEEE
 
         public static double ShannonEntropy(int[] Ciphertext)

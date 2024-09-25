@@ -14,7 +14,6 @@ h1 {
     font-size: xx-large;
 }
 
-
 main {
     font-family: 'Comic Sans MS';
     background-color: #013368;
@@ -25,7 +24,6 @@ main {
 .page{
     display: flex;
 }
-
 
 .sidebar {
     width: 20%;
@@ -63,7 +61,15 @@ main {
 .stat {    
     border: solid white;
     padding: 1%;
-    width: 30%;
+    margin: 0.5%;
+    width: 32%;
+}
+
+.graph {
+    border: solid white;
+    padding: 1%;
+    margin: 0.5%;
+    width: 65%;
 }
 
 #blinkie {

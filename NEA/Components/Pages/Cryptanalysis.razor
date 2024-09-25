@@ -14,7 +14,7 @@
     <div class="stat">
         <b>Chi-squared Statistic:</b>
         <span>@chisquared</span>
-        <p>Tests how closely the values are the the expected frequencies</p>
+        <p>Tests how closely the values are the the expected frequencies. The higher te number, the less similar they are.</p>
     </div>
     <div class="stat">
         <b>Angle Between Vectors</b>
@@ -26,8 +26,13 @@
         <span>@entropy</span>
         <p>The expected value is around 4.16</p>
     </div>
-    <div class="stat">
-        <BarChart @ref="barChart" Width="400" Height="500" />
+    <div class="graph">
+        <b>Monogram Frequencies</b>
+        <BarChart @ref="monogram" Width="400" Height="300" />
+    </div>
+    <div class="graph">
+        <b>Bigram Frequencies</b>
+        <BarChart @ref="bigram" Width="400" Height="500" />
     </div>
 </div>
 
@@ -40,7 +45,8 @@
     double angles = 0;
     double entropy = 0;
 
-    BarChart barChart = default!;
+    BarChart monogram = default!;
+    BarChart bigram = default!;
     BarChartOptions barChartOptions = default!;
     ChartData chartData = default!;
 
@@ -83,8 +89,8 @@
 
         chartData.Datasets = alphabets;
 
-        await barChart.InitializeAsync(chartData, barChartOptions);
-        await barChart.UpdateAsync(chartData, barChartOptions);       
+        await monogram.InitializeAsync(chartData, barChartOptions);
+        await monogram.UpdateAsync(chartData, barChartOptions);       
 
     }
 
