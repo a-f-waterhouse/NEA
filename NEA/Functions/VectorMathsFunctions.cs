@@ -13,7 +13,7 @@
         }
 
         public static double Angle(Vector a, Vector b) //radians
-        {
+        {            
             return Math.Acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
         }
 

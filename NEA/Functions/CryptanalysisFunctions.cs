@@ -4,6 +4,16 @@ namespace NEA
 {
     public static class CryptanalysisFunctions
     {
+        public static int Length(int[] a)
+        {
+            int length = 0;
+            foreach (int c in a)
+            {
+                length += c;
+            }
+            return length;
+        }
+
         public static double[] MonogramFrequencies()
         {
             return File.ReadAllText(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/monogramFrequencies.txt")).Split(' ').Select(double.Parse).ToArray();
@@ -44,13 +54,9 @@ namespace NEA
             return frequencies;
         } //EEEEEEEEEEEEee
 
-        public static double indexOfCoincidence(int[] frequencies) 
+        public static double IndexOfCoincidence(int[] frequencies) 
         {
-            int length = 0;
-            foreach (int c in frequencies)
-            {
-                length += c;
-            }
+            int length = Length(frequencies);
 
             double a = 0;
             foreach (int f in frequencies)
@@ -69,11 +75,7 @@ namespace NEA
 
         public static double X2Stat(int[] CipherText)
         {
-            int length = 0;
-            foreach(int c in CipherText)
-            {
-                length += c;
-            }
+            int length = Length(CipherText);
             double X = 0;
 
             for (int i = 0; i < 26; i++)
@@ -87,33 +89,28 @@ namespace NEA
         public static double VectorAngles(int[] CipherText)
         {
             double[] expected = new double[26];
-            int length = 0;
-            foreach (int c in CipherText)
-            {
-                length += c;
-            }
+            int length = Length(CipherText);
             for (int i = 0; i < 26; i++)
             {
                 expected[i] = length * (MonogramFrequencies()[i]);
-            }
+            }           
             return VectorMathsFunctions.Angle(new Vector(CipherText.Select(Convert.ToDouble).ToArray()), new Vector(expected));
-        } ///EEEEEEEEEE
+        }
 
         public static double ShannonEntropy(int[] Ciphertext)
         {
             double entropy = 0;
-            int length = 0;
-            for (int i = 0; i < Ciphertext.Length; i++)
-            {
-                length += Ciphertext[i];
-            }
+            int length = Length(Ciphertext);
 
             foreach (int c in Ciphertext)
             {
-                double frequency = c / length;
-                entropy -= (frequency * Math.Log2(frequency));
+                double frequency = (double)c / length;
+                if(frequency!= 0)
+                {
+                    entropy -= (frequency * Math.Log2(frequency));
+                }                
+                Console.WriteLine(Math.Log2(frequency));
             }
-
             return entropy;
         }
 

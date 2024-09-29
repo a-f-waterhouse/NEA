@@ -1,40 +1,90 @@
 ﻿@page "/practice"
 @rendermode InteractiveServer
 <h1>PRACTICE</h1>
+<div class="box">
 Instructions: tick different boxes to choose what type of cipher you want to practice decrypting. Either choose a specific cipher, the components you want to practice, or randomise it!<br />
-
 For hints (which may be necessary for some problems), click the hint button, which will reveal them one at a time.<br />
-
-To check your answer, type it into the answer box and press submit.<br />
-
-<div class="flexbox">
-    <div class="stat">
-        <h6>Individual Ciphers</h6>
-        <input type="radio" name="cipher">Caesar
-        <br />
-        <input type="radio" name="cipher">Vigenere
-        <br />
-        <input type="radio" name="cipher">Hill
-        <br />
-    </div>
-
+To check your answer, type it into the answer box and press submit.
 </div>
 
+<div class="box choices">
+    <select @bind=choice @bind:event="oninput">
+        <option value="specific">Specific cipher</option>
+        <option value="parts">Choose the components</option>
+        <option value="random">Random!</option>
+    </select>
+    
+    @if(choice == "specific")
+    {
+        <br />
+        <h6>Individual Ciphers</h6>
+
+        <fieldset>
+            <InputRadioGroup @bind-Value="cipher">
+                @foreach (string cipher in ciphers)
+                {
+                    <div>
+                        <label>
+                            <InputRadio Value="cipher" />
+                            @cipher
+                        </label>
+                    </div>
+                }
+            </InputRadioGroup>
+        </fieldset>
+
+    } 
+    else if (choice == "parts")
+    {
+        
+    }
+    else if(choice == "random")
+    {
+        <button>RANDOM</button>
+    }
+</div>
+<br />
+<p>@ciphertext</p>
 <textarea></textarea>
 <button>SUBMIT</button>
 
-<p>@test</p>
-
-
 @code {
-    string test = "";
+    string choice = "";
+    string cipher = "";
 
-    string getSampleText()
+    string[] ciphers = { "caesar", "vigenere", "affine" };
+    string plaintext = "", ciphertext = "";
+
+    string decryptionAttempt = "";
+
+    void getSampleText()
     {
         Random rnd = new Random();
         string[] paragraphs = File.ReadAllLines(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/sampleText.txt"));
-        return paragraphs[rnd.Next(1, paragraphs.Length)];
+        plaintext = paragraphs[rnd.Next(1, paragraphs.Length)];
     }
+
+    void Generate()
+    {
+        getSampleText();
+
+    }
+
+    bool Check()
+    {
+        bool error = false;
+        int i = 0;
+        while(! error && i < ciphertext.Length)
+        {
+            if(ciphertext[i] != decryptionAttempt[i])
+            {
+                error = true;
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
 }

@@ -19,7 +19,6 @@ namespace Hill_Climbing
                     key += (char)(i + 97);
                 }
             }
-            Console.WriteLine(key);
 
             for (int i = 0; i < 26; i++)
             {
@@ -29,6 +28,7 @@ namespace Hill_Climbing
         }
         public static string MapCharacters(string plaintext, Dictionary<char, char> key)
         {
+            plaintext = plaintext.ToLower();
             string output = "";
             foreach (char c in plaintext)
             {

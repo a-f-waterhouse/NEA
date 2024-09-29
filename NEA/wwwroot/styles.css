@@ -4,6 +4,15 @@
     margin: auto;
 }
 
+#blinkie {
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    margin-top: 0.5%;
+    display: block;
+    width: 150px;
+    height: 20px;
+}
+
 header {
     background-color: #013368;
 }
@@ -19,6 +28,12 @@ main {
     background-color: #013368;
     color: white;
     padding: 2%;
+}
+
+.box {
+    border: solid white;
+    padding: 1%;
+    margin: 0.5%;
 }
 
 .page{
@@ -40,7 +55,6 @@ main {
     margin-bottom: 10%;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: white;
-    text-decoration: none !important;
     background-color: black;
     border: dashed;
 }
@@ -58,25 +72,15 @@ main {
     margin-top: 1%;
 }
 
-.stat {    
-    border: solid white;
-    padding: 1%;
-    margin: 0.5%;
+.stat { 
     width: 32%;
 }
 
 .graph {
-    border: solid white;
-    padding: 1%;
-    margin: 0.5%;
     width: 65%;
 }
 
-#blinkie {
-    margin-left: 0.5%;
-    margin-right: 0.5%;
-    margin-top: 0.5%;
-    display: block;
-    width: 150px;
-    height: 20px;
+.choices{
+    min-height: 30%;
+
 }

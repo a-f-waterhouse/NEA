@@ -33,15 +33,9 @@ namespace Hill_Climbing
             return total;
         }
 
-
-
-        public static double[] MonogramFrequencies()
-        {
-            return File.ReadAllText( "monogramFrequencies.txt").Split(' ').Select(double.Parse).ToArray();
-        }
-
         public static int[] CalculateLetterFrequencies(string input)
         {
+            input = input.ToLower();
             int[] f = new int[26];
             foreach (char c in input)
             {
@@ -53,8 +47,61 @@ namespace Hill_Climbing
             return f;
         }
 
-        public static Dictionary<string, int> CalculateBigramFrequencies(string input)
+        public static Dictionary<string, double> getQuadgrams()
         {
+            Dictionary<string, double> quadgrams = new Dictionary<string, double>();
+            using (StreamReader sr = new StreamReader("quadgramFrequencies.txt"))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string[] line = sr.ReadLine().Split(' ');
+                    quadgrams.Add(line[0], Math.Log10(double.Parse(line[1])));
+                }
+            }
+            return quadgrams;
+        }
+
+        public static double QuadgramFitness(string text)
+        {
+            double total = 0;
+
+            Dictionary<string, double> quadgrams = getQuadgrams();
+
+            for (int i = 0; i < text.Length - 3; i++)
+            {
+                bool letters = true;
+                foreach(char c in text.Substring(i, 4))
+                {
+                    if(!CipherMathsFunctions.isLetter(c))
+                    {
+                        letters = false;
+                    }
+                }
+                if (letters)
+                {
+                    try
+                    {
+                        total += quadgrams[text.Substring(i, 4).ToUpper()];
+                    }
+                    catch {
+                        total -= 10;
+                    }
+                                   
+                }
+            }
+            return total;
+        }
+
+
+
+        public static double[] MonogramFrequencies()
+        {
+            return File.ReadAllText( "monogramFrequencies.txt").Split(' ').Select(double.Parse).ToArray();
+        }
+
+
+        public static Dictionary<string, int> CalculateBigramFrequencies(string input)
+        {            
             Dictionary<string, int> frequencies = new Dictionary<string, int>();
             for (int i = 0; i < input.Length-1; i++)
             {

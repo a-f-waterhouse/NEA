@@ -7,30 +7,30 @@
 <button @onclick="submit">EEEEEE</button>
 
 <div class="flexBox">
-    <div class="stat">
+    <div class="stat box">
         <b>Index Of Coincidence: <span>@ioc</span></b>
         <p>index of coincidence in English = 0.0667, random = 0.0385, closer to random it is, the more alphabets used.</p>
     </div>
-    <div class="stat">
+    <div class="stat box">
         <b>Chi-squared Statistic:</b>
         <span>@chisquared</span>
         <p>Tests how closely the values are the the expected frequencies. The higher te number, the less similar they are.</p>
     </div>
-    <div class="stat">
+    <div class="stat box">
         <b>Angle Between Vectors</b>
         <span>@angles</span>
         <p>rahhhh</p>
     </div>
-    <div class="stat">
+    <div class="stat box">
         <b>Shanonnon Entropy</b>
         <span>@entropy</span>
         <p>The expected value is around 4.16</p>
     </div>
-    <div class="graph">
+    <div class="graph box">
         <b>Monogram Frequencies</b>
         <BarChart @ref="monogram" Width="400" Height="300" />
     </div>
-    <div class="graph">
+    <div class="graph box">
         <b>Bigram Frequencies</b>
         <BarChart @ref="bigram" Width="400" Height="500" />
     </div>
@@ -66,7 +66,7 @@
         int length = 0;
         foreach (char c in input)
         {
-            if (c - 97 < 26 && c - 97 >= 0)
+            if (CipherMathsFunctions.isLetter(c))
             {
                 actual[c - 97]++;
                 length++;
@@ -77,8 +77,7 @@
             expected[i] = length * frequencies[i];
         }
 
-
-        ioc = CryptanalysisFunctions.indexOfCoincidence(actual);
+        ioc = CryptanalysisFunctions.IndexOfCoincidence(actual);
         chisquared = CryptanalysisFunctions.X2Stat(actual);
         angles = CryptanalysisFunctions.VectorAngles(actual);
         entropy = CryptanalysisFunctions.ShannonEntropy(actual);
