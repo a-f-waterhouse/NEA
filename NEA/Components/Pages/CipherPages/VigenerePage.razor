@@ -16,21 +16,30 @@
 <br />
 <button @onclick="Encrypt">ENCRYPT</button>
 <button @onclick="Decrypt">DECRYPT</button>
+<button @onclick="calculateKeyLength">KEYLENGTH</button>
 <br />
+
+<p>@keyLength</p>
 
 @code {
     string plaintext = "";
     string key = "";
     string ciphertext = "";
+    int keyLength = 0;
 
     void Encrypt()
     {
-        ciphertext = Vigenere.Encrypt(plaintext, key);
+        ciphertext = Vigenere.Encrypt(key, plaintext);
     }
 
     void Decrypt()
     {
-        plaintext = Vigenere.Decrypt(ciphertext, key);
+        plaintext = Vigenere.Decrypt(key, ciphertext);
+    }
+
+    void calculateKeyLength()
+    {
+        keyLength = Vigenere.KeyLength(ciphertext);
     }
 
 }

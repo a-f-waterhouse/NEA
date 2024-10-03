@@ -43,12 +43,15 @@ To check your answer, type it into the answer box and press submit.
         <button>RANDOM</button>
     }
 </div>
+<button @onclick="Generate">GENERATE CIPHERTEXT</button>
 <br />
 <p>@ciphertext</p>
 <textarea></textarea>
 <button>SUBMIT</button>
 
 @code {
+    Random rnd = new Random();
+
     string choice = "";
     string cipher = "";
 
@@ -56,6 +59,7 @@ To check your answer, type it into the answer box and press submit.
     string plaintext = "", ciphertext = "";
 
     string decryptionAttempt = "";
+
 
     void getSampleText()
     {
@@ -67,6 +71,30 @@ To check your answer, type it into the answer box and press submit.
     void Generate()
     {
         getSampleText();
+        switch(cipher)
+        {
+            case "caesar":
+                ciphertext = Caesar.Encrypt(plaintext, rnd.Next(1,25));
+                break;
+
+            case "affine":
+                ciphertext = Affine.Encrypt(rnd.Next(1, 25), rnd.Next(1, 25), plaintext);
+                break;            
+
+            case "vigenere":                
+                string key = "";
+                while (key.Length < 26)
+                {
+                    int c = rnd.Next(0, 26) + 97;
+                    if (!key.Contains((char)c))
+                    {
+                        key += (char)c;
+                    }
+                }
+                ciphertext = Vigenere.Encrypt(key, plaintext);
+                break;
+
+        }
 
     }
 
