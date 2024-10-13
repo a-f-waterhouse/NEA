@@ -36,6 +36,8 @@ To check your answer, type it into the answer box and press submit.
     } 
     else if (choice == "parts")
     {
+        <input type="checkbox" checked = ""/><label>Polyalphabetic/monoalphabetic</label>
+        <input type="checkbox" checked="" /><label>2</label>
         
     }
     else if(choice == "random")
@@ -46,16 +48,23 @@ To check your answer, type it into the answer box and press submit.
 <button @onclick="Generate">GENERATE CIPHERTEXT</button>
 <br />
 <p>@ciphertext</p>
-<textarea></textarea>
+<p>@cipher</p>
+<textarea>@input</textarea>
 <button>SUBMIT</button>
+
+<button @onclick="Hint">HINT</button>
+<p>@hints</p>
 
 @code {
     Random rnd = new Random();
+    int hintCount = 0;
 
     string choice = "";
     string cipher = "";
+    string hints = "";
+    string input = "";
 
-    string[] ciphers = { "caesar", "vigenere", "affine" };
+    string[] ciphers = { "caesar", "vigenere", "affine", "substitution" };
     string plaintext = "", ciphertext = "";
 
     string decryptionAttempt = "";
@@ -70,18 +79,44 @@ To check your answer, type it into the answer box and press submit.
 
     void Generate()
     {
-        getSampleText();
-        switch(cipher)
+        getSampleText();        
+
+        switch(choice)
+        {
+            case "cipher":
+                EncryptWithSpecificCipher(cipher);
+                break;
+
+
+            case "parts":
+                break;
+
+            case "random":
+                Random rnd = new Random();
+                cipher = ciphers[rnd.Next(0, ciphers.Length)];
+                EncryptWithSpecificCipher(cipher);
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    void EncryptWithSpecificCipher(string input)
+    {
+        
+        switch (input)
         {
             case "caesar":
-                ciphertext = Caesar.Encrypt(plaintext, rnd.Next(1,25));
+                ciphertext = Caesar.Encrypt(plaintext, rnd.Next(1, 25));
                 break;
 
             case "affine":
                 ciphertext = Affine.Encrypt(rnd.Next(1, 25), rnd.Next(1, 25), plaintext);
-                break;            
+                break;
 
-            case "vigenere":                
+            case "vigenere":
                 string key = "";
                 while (key.Length < 26)
                 {
@@ -94,9 +129,55 @@ To check your answer, type it into the answer box and press submit.
                 ciphertext = Vigenere.Encrypt(key, plaintext);
                 break;
 
-        }
+            case "substitution":
+                string k = "";
+                while (k.Length < 26)
+                {
+                    int c = rnd.Next(0, 26) + 97;
+                    if (!k.Contains((char)c))
+                    {
+                        k += (char)c;
+                    }
+                }
+                //Substitution.getKey()
+                //ciphertext = Substitution.Encrypt(key, plaintext);
+                break;
 
+
+        }        
     }
+
+    void Hint()
+    {
+        switch(hintCount)
+        {
+            case 0:
+                hints = "The type of cipher is: " + cipher;
+                break;
+
+            case 1:
+                hints += "\n A part of the plaintext is: " + plaintext.Substring(0, 10);
+                break;
+
+        }
+    }
+
+    void HintBcWrong()
+    {
+        switch(cipher)
+        {
+            case "vigenere":
+                double iocInput = CryptanalysisFunctions.IndexOfCoincidence(input);
+                double expectedIoc = CryptanalysisFunctions.IndexOfCoincidence(plaintext);
+                if(iocInput< expectedIoc)
+                {
+                    hints += "\n Try a different length of key";
+                }
+                break;
+
+        }
+    }
+
 
     bool Check()
     {

@@ -181,6 +181,7 @@ namespace Ciphers
             return output;
         }
 
+
         static void Main(string[] args)
         {
             string plaintext = "hello";

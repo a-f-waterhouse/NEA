@@ -4,6 +4,8 @@ namespace NEA
 {
     public static class CryptanalysisFunctions
     {
+        private static Random rnd = new Random();
+
         public static int Length(int[] a)
         {
             int length = 0;
@@ -14,7 +16,7 @@ namespace NEA
             return length;
         }
 
-        public static double[] MonogramFrequencies()
+        private static double[] ExpectedMonogramFrequencies()
         {
             return File.ReadAllText(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/monogramFrequencies.txt")).Split(' ').Select(double.Parse).ToArray();
         }
@@ -31,6 +33,20 @@ namespace NEA
                 }
             }
             return f;
+        }
+
+        private static Dictionary<string, double> ExpectedBigramFrequencies()
+        {
+            Dictionary<string, double> bigrams = new Dictionary<string, double>();
+            using (StreamReader sr = new StreamReader("bigramFrequencies.txt"))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string[] line = sr.ReadLine().Split(' ');
+                    bigrams.Add(line[0], Math.Log10(double.Parse(line[1])));
+                }
+            }
+            return bigrams;
         }
 
         public static Dictionary<string, int> CalculateBigramFrequencies(string input)
@@ -54,6 +70,22 @@ namespace NEA
             return frequencies;
         } //EEEEEEEEEEEEee
 
+        public static double BigramFitness(string text)
+        {
+            double total = 0;
+
+            Dictionary<string, double> bigrams = ExpectedBigramFrequencies();
+
+            for (int i = 0; i < text.Length - 1; i++)
+            {
+                if (CipherMathsFunctions.isLetter(text[i]) && CipherMathsFunctions.isLetter(text[i + 1]))
+                {
+                    total += bigrams[(text[i] + text[i + 1].ToString()).ToUpper()];
+                }
+            }
+            return total;
+        }
+
         public static double IndexOfCoincidence(int[] frequencies) 
         {
             int length = Length(frequencies);
@@ -71,6 +103,11 @@ namespace NEA
                 return 0;
             }
             
+        }
+
+        public static double IndexOfCoincidence(string input)
+        {
+            return IndexOfCoincidence(CalculateLetterFrequencies(input));
         }
 
         public static double X2Stat(int[] CipherText)
@@ -114,24 +151,53 @@ namespace NEA
             return entropy;
         }
 
-        public static int NumberOfCommonWords(string text)
+        static string HillClimbing(string ciphertext, int iterations, int limit)
         {
-            int count = 0;
-            using (StreamReader sr = new StreamReader(""))
+            Dictionary<double, string> decryptions = new Dictionary<double, string>();
+
+            for (int i = 0; i < iterations; i++)
             {
-                while (!sr.EndOfStream)
+                string key = "";
+                while (key.Length < 26)
                 {
-                    string word = sr.ReadLine();
-                    string t = text;
-                    if(text.Contains(word))
+                    int c = rnd.Next(0, 26) + 97;
+                    if (!key.Contains((char)c))
                     {
-                        count++;
+                        key += (char)c;
                     }
                 }
+                int count = 0;
+
+                Dictionary<char, char> encryptionMap = new Dictionary<char, char>();
+                Dictionary<char, char> decryptionMap = new Dictionary<char, char>();
+                Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
+
+                string d = Substitution.MapCharacters(ciphertext, encryptionMap);
+                double fCurrent = CryptanalysisFunctions.BigramFitness(d), f2;
+
+                while (count < limit)
+                {
+                    char[] newKey = key.ToCharArray();
+                    int index1 = rnd.Next(0, 26), index2 = rnd.Next(0, 26);
+
+                    (newKey[index2], newKey[index1]) = (newKey[index1], newKey[index2]);
+                    Substitution.getKey(new string(newKey), ref encryptionMap, ref decryptionMap);
+                    string decryption2 = Substitution.MapCharacters(ciphertext, encryptionMap);
+
+                    f2 = CryptanalysisFunctions.BigramFitness(decryption2);
+                    if (fCurrent < f2)
+                    {
+                        key = new string(newKey);
+                        count = 0;
+                        d = decryption2;
+                        fCurrent = f2;
+                    }
+
+                    count++;
+                }
+                decryptions.TryAdd(fCurrent, d);
             }
-            return count;
-
-
+            return decryptions[decryptions.Keys.Max()];
         }
     }
 }

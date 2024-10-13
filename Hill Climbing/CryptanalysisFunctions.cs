@@ -121,7 +121,7 @@ namespace Hill_Climbing
             return frequencies;
         } //EEEEEEEEEEEEee
 
-        public static double indexOfCoincidence(int[] frequencies) 
+        public static double IndexOfCoincidence(int[] frequencies) 
         {
             int length = 0;
             foreach (int c in frequencies)
