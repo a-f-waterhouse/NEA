@@ -1,10 +1,13 @@
-﻿namespace NEA
+﻿using System.Text.RegularExpressions;
+
+namespace NEA
 {
     public class CipherMathsFunctions
     {
         public static bool isLetter(char c)
         {
-            if(c >= 'a' && c <= 'z')
+            
+            if(new Regex("[a-z]").IsMatch(c.ToString()))
             {
                 return true;
             }
@@ -24,7 +27,7 @@
             return 0;
         }
 
-        public static bool coprime(int a, int b)
+        public static bool Coprime(int a, int b)
         {
             if (a == 0 || b == 0)
             {

@@ -21,6 +21,7 @@
 
 </div>
 <br />
+<p>@error</p>
 <button @onclick="encryptButton">ENCRYPT</button>
 <button @onclick="decryptButton">DECRYPT</button>
 <br />
@@ -34,19 +35,37 @@ Bruteforcing involves decrypting with every single possible key (1-25) and then 
     string plaintext = "";
     int key = 0;
     string ciphertext = "";
+    string error = "";
 
     BarChart barChart = default!;
     BarChartOptions barChartOptions = default!;
     ChartData chartData = default!;
 
     void encryptButton()
-    {
-        ciphertext = Caesar.Encrypt(plaintext, key);
+    {        
+        if(1 <= key && key <= 25)
+        {
+            ciphertext = Caesar.Encrypt(plaintext, key);
+        }
+        else
+        {
+            error = "Key must be between 1 and 25 inclusive";
+        }
+
     }
 
     void decryptButton()
     {
-        plaintext = Caesar.Decrypt(ciphertext, key);
+        if(1<= key && key <= 25)
+        {
+            plaintext = Caesar.Decrypt(ciphertext, key);
+
+        }
+        else
+        {
+            error = "Key must be between 1 and 25 inclusive";
+        }
+
     }
 
     async void Bruteforce()

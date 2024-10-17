@@ -22,6 +22,7 @@
         <textarea class="submission" @bind=B @bind:event="oninput"></textarea>
     </div>
 </div>
+<p>@error</p>
 <button @onclick="encryptButton">ENCRYPT</button>
 <button @onclick="decryptButton">DECRYPT</button>
 <br />
@@ -33,17 +34,35 @@
     int A = 0;
     int B = 0;
     string ciphertext = "";
+    string error = "";
 
     void encryptButton()
     {
+        error = "";
         plaintext = plaintext.ToLower();
-        ciphertext = Affine.Encrypt(A, B, plaintext);
+        if(CipherMathsFunctions.Coprime(A, 26))
+        {
+            ciphertext = Affine.Encrypt(A, B, plaintext);
+        }
+        else
+        {
+            error = "Value of A must be coprime with 26";
+        }
     }
 
     void decryptButton()
     {
+        error = "";
         ciphertext = ciphertext.ToLower();
-        plaintext = Affine.Decrypt(A, B, ciphertext);
+        if (CipherMathsFunctions.Coprime(A, 26))
+        {
+            plaintext = Affine.Decrypt(A, B, ciphertext);
+        }
+        else
+        {
+            error = "Value of A must be coprime with 26";
+        }
+        
     }
 
     void Bruteforce()
@@ -69,7 +88,6 @@
         plaintext = Affine.Decrypt(aMin, bMin, ciphertext);
         A = aMin;
         B = bMin;
-
         
     }
 
