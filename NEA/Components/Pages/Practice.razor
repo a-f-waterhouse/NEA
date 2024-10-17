@@ -14,9 +14,9 @@ To check your answer, type it into the answer box and press submit.
         <option value="random">Random!</option>
     </select>
     
+    <br />
     @if(choice == "specific")
-    {
-        <br />
+    {      
         <h6>Individual Ciphers</h6>
 
         <fieldset>
@@ -36,24 +36,38 @@ To check your answer, type it into the answer box and press submit.
     } 
     else if (choice == "parts")
     {
-        <input type="checkbox" checked = ""/><label>Polyalphabetic/monoalphabetic</label>
-        <input type="checkbox" checked="" /><label>2</label>
+        <h6>Components</h6>
+        <span>Polyalphabetic</span>
+        <label class="switch">
+            <input type="checkbox" @bind="mono">
+            <span class="slider"></span>
+        </label>
+        <span>Monoalphabetic</span>
+        <br />
+        <span>Transposition</span>
+        <label class="switch">
+            <input type="checkbox" @bind="substitution">
+            <span class="slider"></span>
+        </label>
+        <span>Substitution</span>
         
     }
     else if(choice == "random")
     {
+        <h6>Random</h6>
         <button>RANDOM</button>
     }
 </div>
 <button @onclick="Generate">GENERATE CIPHERTEXT</button>
 <br />
 <p>@ciphertext</p>
-<p>@cipher</p>
-<textarea>@input</textarea>
+<textarea>@decryptionAttempt</textarea>
 <button>SUBMIT</button>
 
 <button @onclick="Hint">HINT</button>
 <p>@hints</p>
+<p>@mono</p>
+<p>@substitution</p>
 
 @code {
     Random rnd = new Random();
@@ -61,13 +75,12 @@ To check your answer, type it into the answer box and press submit.
 
     string choice = "";
     string cipher = "";
-    string hints = "";
-    string input = "";
-
-    string[] ciphers = { "caesar", "vigenere", "affine", "substitution" };
-    string plaintext = "", ciphertext = "";
-
     string decryptionAttempt = "";
+
+    bool mono = false, substitution = false;
+
+    string[] ciphers = { "caesar", "affine", "substitution", "vigenere", "railfence"};
+    string plaintext = "", ciphertext = "", hints  ="";   
 
 
     void getSampleText()
@@ -78,34 +91,51 @@ To check your answer, type it into the answer box and press submit.
     }
 
     void Generate()
-    {
-        getSampleText();        
+    {        
+        hintCount = 0;
+        hints = "";
+        Random rnd = new Random();
+        getSampleText();   
 
         switch(choice)
         {
-            case "cipher":
-                EncryptWithSpecificCipher(cipher);
-                break;
-
-
             case "parts":
+                if(!mono && !substitution)
+                {
+                    ciphertext = "Invalid choices";
+                    cipher = "";
+                }
+                else if(!mono)
+                {
+                    cipher = "vigenere";
+                }
+                else if(substitution)
+                {
+                    cipher = ciphers[rnd.Next(0, 3)];
+                }
+                else
+                {
+                    cipher = "railfence";
+                }
+
                 break;
 
             case "random":
-                Random rnd = new Random();
-                cipher = ciphers[rnd.Next(0, ciphers.Length)];
-                EncryptWithSpecificCipher(cipher);
-                break;
 
-            default:
+                cipher = ciphers[rnd.Next(0, ciphers.Length)];
+
                 break;
 
         }
+
+        if(cipher != "")
+        {
+            EncryptWithSpecificCipher(cipher);
+        }        
     }
 
     void EncryptWithSpecificCipher(string input)
-    {
-        
+    {        
         switch (input)
         {
             case "caesar":
@@ -143,6 +173,11 @@ To check your answer, type it into the answer box and press submit.
                 //ciphertext = Substitution.Encrypt(key, plaintext);
                 break;
 
+            case "railfence":
+                ciphertext = Railfence.Encrypt(plaintext, rnd.Next(2, plaintext.Length));
+                break;
+
+
 
         }        
     }
@@ -156,10 +191,11 @@ To check your answer, type it into the answer box and press submit.
                 break;
 
             case 1:
-                hints += "\n A part of the plaintext is: " + plaintext.Substring(0, 10);
+                hints += "\r\n A part of the plaintext is: " + plaintext.Substring(0, 10);
                 break;
 
         }
+        hintCount++;
     }
 
     void HintBcWrong()
@@ -167,7 +203,7 @@ To check your answer, type it into the answer box and press submit.
         switch(cipher)
         {
             case "vigenere":
-                double iocInput = CryptanalysisFunctions.IndexOfCoincidence(input);
+                double iocInput = CryptanalysisFunctions.IndexOfCoincidence(decryptionAttempt);
                 double expectedIoc = CryptanalysisFunctions.IndexOfCoincidence(plaintext);
                 if(iocInput< expectedIoc)
                 {

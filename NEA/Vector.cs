@@ -11,6 +11,7 @@ namespace NEA
         public Vector(double[] inV)
         {
             vector = inV;
+            
         }
 
         public double Element(int i)
@@ -21,7 +22,7 @@ namespace NEA
         public double Magnitude()
         {
             double total = 0;
-            foreach(int i in vector)
+            foreach(double i in vector)
             {
                 total += Math.Pow(i, 2);
             }

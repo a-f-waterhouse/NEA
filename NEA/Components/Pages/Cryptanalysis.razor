@@ -4,22 +4,22 @@
 <h3>Cryptanalysis</h3>
 <textarea class="submission" @bind=input @bind:event="oninput"></textarea>
 
-<button @onclick="submit">EEEEEE</button>
+<button @onclick="submit">SUBMIT</button>
 
 <div class="flexBox">
     <div class="stat box">
         <b>Index Of Coincidence: <span>@ioc</span></b>
-        <p>index of coincidence in English = 0.0667, random = 0.0385, closer to random it is, the more alphabets used.</p>
+        <p>The index of coincidence in English is 0.0667 and random is around 0.0385. The closer to random it is, the more alphabets used, so the longer the length of the key.</p>
     </div>
     <div class="stat box">
         <b>Chi-squared Statistic:</b>
         <span>@chisquared</span>
-        <p>Tests how closely the values are the the expected frequencies. The higher te number, the less similar they are.</p>
+        <p>Tests how closely the values are the the expected frequencies. The higher the number, the less similar they are.</p>
     </div>
     <div class="stat box">
         <b>Angle Between Vectors</b>
         <span>@angles</span>
-        <p>rahhhh</p>
+        <p>Models the frequencies as 26D vectors. The smaller the angle between them, the more similar they are.</p>
     </div>
     <div class="stat box">
         <b>Shanonnon Entropy</b>
@@ -30,9 +30,10 @@
         <b>Monogram Frequencies</b>
         <BarChart @ref="monogram" Width="400" Height="300" />
     </div>
-    <div class="graph box">
+    <div class="stat box">
         <b>Bigram Frequencies</b>
-        <BarChart @ref="bigram" Width="400" Height="500" />
+        <span>@bigramFitness</span>
+        <p>The lower the number is, the closer the fitness is to English, based on probabilities of pairs of letters.</p>
     </div>
 </div>
 
@@ -44,43 +45,33 @@
     double chisquared = 0;
     double angles = 0;
     double entropy = 0;
+    double bigramFitness = 0;
 
     BarChart monogram = default!;
-    BarChart bigram = default!;
     BarChartOptions barChartOptions = default!;
     ChartData chartData = default!;
 
 
-    double[] frequencies = CryptanalysisFunctions.MonogramFrequencies();
+    double[] frequencies = CryptanalysisFunctions.ExpectedMonogramFrequencies();
     double[] expected = new double[26];
     int[] actual = new int[26];
 
     async void submit()
     {
+        actual = CryptanalysisFunctions.CalculateLetterFrequencies(input);
+        int length = CryptanalysisFunctions.Length(actual);
+
         for (int i = 0; i < 26; i++)
         {
-            actual[i] = 0;
-            expected[i] = 0;
+            expected[i] = frequencies[i] * length ;
         }
 
-        int length = 0;
-        foreach (char c in input)
-        {
-            if (CipherMathsFunctions.isLetter(c))
-            {
-                actual[c - 97]++;
-                length++;
-            }
-        }
-        for (int i = 0; i < 26; i++)
-        {
-            expected[i] = length * frequencies[i];
-        }
 
         ioc = CryptanalysisFunctions.IndexOfCoincidence(actual);
         chisquared = CryptanalysisFunctions.X2Stat(actual);
         angles = CryptanalysisFunctions.VectorAngles(actual);
         entropy = CryptanalysisFunctions.ShannonEntropy(actual);
+        bigramFitness = CryptanalysisFunctions.BigramFitness(input) * -1;
 
         var alphabets = new List<IChartDataset>();
         alphabets.Add(new BarChartDataset() { Label = "Expected", Data = expected.ToList().Select(Convert.ToDouble).ToList() });
@@ -89,7 +80,7 @@
         chartData.Datasets = alphabets;
 
         await monogram.InitializeAsync(chartData, barChartOptions);
-        await monogram.UpdateAsync(chartData, barChartOptions);       
+        await monogram.UpdateAsync(chartData, barChartOptions);
 
     }
 

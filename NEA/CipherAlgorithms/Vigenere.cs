@@ -58,7 +58,7 @@
             return result;
         }
 
-        public static int KeyLength(string plaintext)
+        public static int KeyLength(string plaintext) //AAAAAAAAAAAAAAAAAAAAA
         {
             double[] ioc = new double[26];
             for (int i = 1; i < 26; i++)
@@ -77,7 +77,6 @@
 
             for(int i = 0;i < 26;i++)
             {
-                Console.WriteLine(ioc[i]);
                 if (ioc[i] == ioc.Min())
                 {
                     //return i+1;                    

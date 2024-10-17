@@ -5,6 +5,7 @@ namespace NEA
     public static class CryptanalysisFunctions
     {
         private static Random rnd = new Random();
+        private static Dictionary<string, double> ExpectedBigrams = ExpectedBigramFrequencies();
 
         public static int Length(int[] a)
         {
@@ -16,7 +17,7 @@ namespace NEA
             return length;
         }
 
-        private static double[] ExpectedMonogramFrequencies()
+        public static double[] ExpectedMonogramFrequencies()
         {
             return File.ReadAllText(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/monogramFrequencies.txt")).Split(' ').Select(double.Parse).ToArray();
         }
@@ -38,7 +39,7 @@ namespace NEA
         private static Dictionary<string, double> ExpectedBigramFrequencies()
         {
             Dictionary<string, double> bigrams = new Dictionary<string, double>();
-            using (StreamReader sr = new StreamReader("bigramFrequencies.txt"))
+            using (StreamReader sr = new StreamReader(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/bigramFrequencies.txt")))
             {
                 while (!sr.EndOfStream)
                 {
@@ -72,9 +73,10 @@ namespace NEA
 
         public static double BigramFitness(string text)
         {
+            text = text.ToLower();
             double total = 0;
 
-            Dictionary<string, double> bigrams = ExpectedBigramFrequencies();
+            Dictionary<string, double> bigrams = ExpectedBigrams;
 
             for (int i = 0; i < text.Length - 1; i++)
             {
@@ -117,7 +119,7 @@ namespace NEA
 
             for (int i = 0; i < 26; i++)
             {
-                double expected = length * (MonogramFrequencies()[i]);
+                double expected = length * (ExpectedMonogramFrequencies()[i]);
                 X += Math.Pow(CipherText[i] - expected, 2) / expected;
             }
             return X;
@@ -129,9 +131,9 @@ namespace NEA
             int length = Length(CipherText);
             for (int i = 0; i < 26; i++)
             {
-                expected[i] = length * (MonogramFrequencies()[i]);
+                expected[i] = length * (ExpectedMonogramFrequencies()[i]);  
             }           
-            return VectorMathsFunctions.Angle(new Vector(CipherText.Select(Convert.ToDouble).ToArray()), new Vector(expected));
+            return VectorMathsFunctions.Angle(new Vector(CipherText.Select(Convert.ToDouble).ToArray()), new Vector(expected)) * 180 /Math.PI;
         }
 
         public static double ShannonEntropy(int[] Ciphertext)
@@ -145,8 +147,8 @@ namespace NEA
                 if(frequency!= 0)
                 {
                     entropy -= (frequency * Math.Log2(frequency));
-                }                
-                Console.WriteLine(Math.Log2(frequency));
+                }           
+                
             }
             return entropy;
         }
@@ -173,7 +175,7 @@ namespace NEA
                 Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
 
                 string d = Substitution.MapCharacters(ciphertext, encryptionMap);
-                double fCurrent = CryptanalysisFunctions.BigramFitness(d), f2;
+                double fCurrent = BigramFitness(d), f2;
 
                 while (count < limit)
                 {
@@ -184,7 +186,7 @@ namespace NEA
                     Substitution.getKey(new string(newKey), ref encryptionMap, ref decryptionMap);
                     string decryption2 = Substitution.MapCharacters(ciphertext, encryptionMap);
 
-                    f2 = CryptanalysisFunctions.BigramFitness(decryption2);
+                    f2 = BigramFitness(decryption2);
                     if (fCurrent < f2)
                     {
                         key = new string(newKey);

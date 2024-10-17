@@ -3,7 +3,33 @@
 <PageTitle>Home</PageTitle>
 
 
-<h1>Hello, world!!!!</h1>
+<h1>Welcome!</h1>
+
+<p>This site contains resources for learning about ciphers and classical cryptography, as well as practice exercises to test your skills!</p>
+
+<span>The layout is as such:</span>
+
+<ul>
+    <li>Home - You are Here!</li>
+    <li>
+        <a href="ciphers">Ciphers</a>
+        <ul>
+            @foreach (string filePath in Directory.GetFiles(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Components/Pages/CipherPages")))
+            {
+                FileInfo fI = new FileInfo(filePath);
+                string c = fI.Name.Split('.')[0];    
+                <li>
+                <a href="@c">
+                    @c
+                </a>
+                </li>
+
+            }
+        </ul>
+    </li>
+    <li><a href="cryptanalysis"> Cryptanalysis </a></li>
+    <li><a href="practice">Practice</a></li>
+</ul>
 
 <div class="flexBox">
     
