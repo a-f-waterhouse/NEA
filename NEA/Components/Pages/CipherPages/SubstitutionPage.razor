@@ -18,8 +18,10 @@
         <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
     </div>
 </div>
+<p>@errors</p>
 <button @onclick="encryptButton">ENCRYPT</button>
 <button @onclick="decryptButton">DECRYPT</button>
+<button @onclick="bruteforce">BRUTEFORCE</button>
 <br />
 <br />
 
@@ -28,22 +30,60 @@
     string plaintext = "";
     string key = "";
     string ciphertext = "";
+    string errors = "";
     Dictionary<char, char> encryptionMap;
     Dictionary<char, char> decryptionMap;
 
     void encryptButton()
     {
-        plaintext = plaintext.ToLower();
-        Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
-        ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
+        if(ValidKey())
+        {
+            plaintext = plaintext.ToLower();
+            Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
+            ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
+        }
+
     }
 
     void decryptButton()
     {
-        plaintext = plaintext.ToLower();
-        Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
-        ciphertext = ciphertext.ToLower();
-        plaintext = Substitution.MapCharacters(ciphertext, decryptionMap);
+        if(ValidKey())
+        {
+            plaintext = plaintext.ToLower();
+            Substitution.getKey(key, ref encryptionMap, ref decryptionMap);
+            ciphertext = ciphertext.ToLower();
+            plaintext = Substitution.MapCharacters(ciphertext, decryptionMap);
+        }
+
+    }
+
+    bool ValidKey()
+    {
+        string check = "";
+        foreach(char c in key)
+        {
+            if(!check.Contains(c) && CipherMathsFunctions.isLetter(c))
+            {
+                check += c;
+            }
+            else if(check.Contains(c))
+            {
+                errors = "Cannot have duplicate letters in the key.";
+                return false;
+            }
+            else
+            {
+                errors = "Key must only be made up of letters.";
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void bruteforce()
+    {
+        errors = "Loading... [may take a couple minutes]";
+        plaintext = CryptanalysisFunctions.HillClimbing(ciphertext.ToLower(), 5, 1000);
     }
 
 }

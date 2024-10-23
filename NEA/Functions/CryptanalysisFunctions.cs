@@ -153,7 +153,7 @@ namespace NEA
             return entropy;
         }
 
-        static string HillClimbing(string ciphertext, int iterations, int limit)
+        public static string HillClimbing(string ciphertext, int iterations, int limit)
         {
             Dictionary<double, string> decryptions = new Dictionary<double, string>();
 

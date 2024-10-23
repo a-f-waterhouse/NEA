@@ -58,30 +58,45 @@
             return result;
         }
 
-        public static int KeyLength(string plaintext) //AAAAAAAAAAAAAAAAAAAAA
+        public static int KeyLength(string plaintext)
         {
-            double[] ioc = new double[26];
+            string temp = "";
+            foreach(char c in plaintext)
+            {
+                if(CipherMathsFunctions.isLetter(c))
+                {
+                    temp += c;
+                }
+            }
+            plaintext = temp;
+            double[] ioc = new double[25];
             for (int i = 1; i < 26; i++)
-            {                
-                for (int j = 0; j <i; j++)
+            {
+                for (int j = 0; j < i; j++)
                 {
                     string chunk = "";
-                    for (int k = j; k < plaintext.Length; k+=i)
+                    for (int k = j; k < plaintext.Length; k += i)
                     {
                         chunk += plaintext[k];
                     }
-                    ioc[i] += CryptanalysisFunctions.IndexOfCoincidence(CryptanalysisFunctions.CalculateLetterFrequencies(chunk));
+                    if (chunk.Length > 1)
+                    {
+                        ioc[i - 1] += CryptanalysisFunctions.IndexOfCoincidence(CryptanalysisFunctions.CalculateLetterFrequencies(chunk));
+                    }
+
                 }
-                ioc[i] /= i;
+                ioc[i - 1] /= i;
+
             }
 
-            for(int i = 0;i < 26;i++)
+            for (int i = 0; i < 25; i++)
             {
-                if (ioc[i] == ioc.Min())
+                if (ioc[i] > 0.06)
                 {
-                    //return i+1;                    
+                    return i + 1;
                 }
             }
+
             return 0;
         }
     }

@@ -14,6 +14,7 @@
 <p>Enter key: </p>
 <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
 <br />
+<p>@errors</p>
 <button @onclick="Encrypt">ENCRYPT</button>
 <button @onclick="Decrypt">DECRYPT</button>
 <button @onclick="calculateKeyLength">KEYLENGTH</button>
@@ -25,21 +26,56 @@
     string plaintext = "";
     string key = "";
     string ciphertext = "";
+    string errors = "";
     int keyLength = 0;
 
     void Encrypt()
     {
-        ciphertext = Vigenere.Encrypt(key, plaintext);
+        if (ValidKey())
+        {
+            ciphertext = Vigenere.Encrypt(key, plaintext);
+        }       
+
     }
 
     void Decrypt()
     {
-        plaintext = Vigenere.Decrypt(key, ciphertext);
+        if(ValidKey())
+        {
+            plaintext = Vigenere.Decrypt(key, ciphertext);
+        }        
+    }
+
+    bool ValidKey()
+    {
+        plaintext = plaintext.ToLower();
+        ciphertext = ciphertext.ToLower();
+        string check = "";
+        foreach (char c in key)
+        {
+            if (!check.Contains(c) && CipherMathsFunctions.isLetter(c))
+            {
+                check += c;
+            }
+            else if (check.Contains(c))
+            {
+                errors = "Cannot have duplicate letters in the key.";
+                return false;
+            }
+            else
+            {
+                errors = "Key must only be made up of letters.";
+                return false;
+            }
+        }
+        return true;
     }
 
     void calculateKeyLength()
     {
         keyLength = Vigenere.KeyLength(ciphertext);
     }
+
+    
 
 }
