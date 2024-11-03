@@ -22,39 +22,55 @@
     </div>
 
 </div>
-
+<p>@errors</p>
 <button @onclick="encryptButton">ENCRYPT</button>
 <button @onclick="decryptButton">DECRYPT</button>
 
 
 @code {
+    string errors = "";
     string plaintext = "";
     string gridKeyInput = "";
     string key = "";
     char[,] gridKey = new char[5, 5];
     string ciphertext = "";
 
-    void getkey()
+    bool getkey()
     {
+        errors = "";
+        plaintext = plaintext.ToLower();
+        ciphertext = ciphertext.ToLower();
         key = key.ToLower();
         gridKeyInput = gridKeyInput.ToLower();
-        for (int i = 0; i < 25; i++)
+
+        if(gridKeyInput.Length == 25)
         {
-            gridKey[i % 5, i / 5] = gridKeyInput[i];
+            for (int i = 0; i < 25; i++)
+            {
+                gridKey[i % 5, i / 5] = gridKeyInput[i];
+            }
+            return true;
         }
+        errors = "The grid key must be 25 letters long, as in a 5x5 grid. It must be one string, with no spaces, commas or line breaks.";
+        return false;
+
     }
 
     void encryptButton()
     {
-        getkey();
-        plaintext = plaintext.ToLower();
-        ciphertext = Nihilist.Encrypt(plaintext, gridKey, key);
+        if(getkey())
+        {
+            ciphertext = Nihilist.Encrypt(plaintext, gridKey, key);
+        }
+
     }
 
     void decryptButton()
     {
-        getkey();
-        ciphertext = ciphertext.ToLower();
-        plaintext = Nihilist.Decrypt(ciphertext, gridKey, key);
+        if(getkey())
+        {
+            plaintext = Nihilist.Decrypt(ciphertext, gridKey, key);
+        }
+        
     }
 }

@@ -1,5 +1,8 @@
 ﻿@page "/practice"
 @rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<canvas id="confetti-canvas" style="position:fixed;z-index:999999;pointer-events:none" width="1000" height="665"></canvas>
 <h1>PRACTICE</h1>
 <div class="box">
 Instructions: tick different boxes to choose what type of cipher you want to practice decrypting. Either choose a specific cipher, the components you want to practice, or randomise it!<br />
@@ -13,7 +16,7 @@ To check your answer, type it into the answer box and press submit.
         <option value="parts">Choose the components</option>
         <option value="random">Random!</option>
     </select>
-    
+    <br />
     <br />
     @if(choice == "specific")
     {      
@@ -60,14 +63,18 @@ To check your answer, type it into the answer box and press submit.
 </div>
 <button @onclick="Generate">GENERATE CIPHERTEXT</button>
 <br />
-<p>@ciphertext</p>
-<textarea>@decryptionAttempt</textarea>
-<button>SUBMIT</button>
-
+<pre>@ciphertext</pre>
+<br />
+<textarea @bind=decryptionAttempt @bind:event="oninput"></textarea>
+<button @onclick="Check">SUBMIT</button>
 <button @onclick="Hint">HINT</button>
-<p>@hints</p>
-<p>@mono</p>
-<p>@substitution</p>
+<ul>
+    @foreach (string hint in hints)
+    {
+        <li>@hint</li>
+    }
+</ul>
+
 
 @code {
     Random rnd = new Random();
@@ -80,20 +87,21 @@ To check your answer, type it into the answer box and press submit.
     bool mono = false, substitution = false;
 
     string[] ciphers = { "caesar", "affine", "substitution", "vigenere", "railfence"};
-    string plaintext = "", ciphertext = "", hints  ="";   
+    string plaintext = "", ciphertext = "";
+    List<string> hints = new List<string>();
 
 
     void getSampleText()
     {
         Random rnd = new Random();
         string[] paragraphs = File.ReadAllLines(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/sampleText.txt"));
-        plaintext = paragraphs[rnd.Next(1, paragraphs.Length)];
+        plaintext = paragraphs[rnd.Next(0, paragraphs.Length)].ToLower();
     }
 
     void Generate()
     {        
         hintCount = 0;
-        hints = "";
+        hints.Clear();
         Random rnd = new Random();
         getSampleText();   
 
@@ -160,24 +168,15 @@ To check your answer, type it into the answer box and press submit.
                 break;
 
             case "substitution":
-                string k = "";
-                while (k.Length < 26)
-                {
-                    int c = rnd.Next(0, 26) + 97;
-                    if (!k.Contains((char)c))
-                    {
-                        k += (char)c;
-                    }
-                }
-                //Substitution.getKey()
-                //ciphertext = Substitution.Encrypt(key, plaintext);
+                string k = RandomWord();
+                Dictionary<char, char> encryptionMap = new Dictionary<char, char>(), decryptionMap = new Dictionary<char, char>();
+                Substitution.getKey(k, ref encryptionMap, ref decryptionMap);
+                ciphertext = Substitution.MapCharacters(plaintext, encryptionMap);
                 break;
 
-            case "railfence":
-                ciphertext = Railfence.Encrypt(plaintext, rnd.Next(2, plaintext.Length));
+            case "railfence":                
+                ciphertext = Railfence.Encrypt(plaintext, rnd.Next(2, 10));
                 break;
-
-
 
         }        
     }
@@ -187,11 +186,14 @@ To check your answer, type it into the answer box and press submit.
         switch(hintCount)
         {
             case 0:
-                hints = "The type of cipher is: " + cipher;
+                hints.Add("The type of cipher is: " + cipher);
                 break;
 
             case 1:
-                hints += "\r\n A part of the plaintext is: " + plaintext.Substring(0, 10);
+                string[] split = plaintext.Split(' ');
+                int value = rnd.Next(0, split.Length);
+                string plaintextSample = split[value] + " " + split[value+1] + " " +split[value + 2];
+                hints.Add("A part of the plaintext is: " + plaintextSample);
                 break;
 
         }
@@ -200,34 +202,65 @@ To check your answer, type it into the answer box and press submit.
 
     void HintBcWrong()
     {
-        switch(cipher)
+        hints.Clear();
+        double iocInput = CryptanalysisFunctions.IndexOfCoincidence(decryptionAttempt);
+        double expectedIoc = CryptanalysisFunctions.IndexOfCoincidence(plaintext);
+        if(iocInput < expectedIoc)
         {
-            case "vigenere":
-                double iocInput = CryptanalysisFunctions.IndexOfCoincidence(decryptionAttempt);
-                double expectedIoc = CryptanalysisFunctions.IndexOfCoincidence(plaintext);
-                if(iocInput< expectedIoc)
-                {
-                    hints += "\n Try a different length of key";
-                }
-                break;
+            hints.Add("You're index of coincidence is too low.");
+            switch(cipher)
+            {
+                case "vigenere":
+                    hints.Add("Try a different length of key.");
+                    break;
+
+                default:
+                    hints.Add("You may have the type of cipher wrong!");
+                    break;
+
+            }          
+        }
+        double x2Input = CryptanalysisFunctions.X2Stat(CryptanalysisFunctions.CalculateLetterFrequencies(decryptionAttempt));
+        double expectedx2 = CryptanalysisFunctions.X2Stat(CryptanalysisFunctions.CalculateLetterFrequencies(plaintext));
+        if(x2Input > expectedx2 && cipher == "railfence")
+        {
+            hints.Add("You may have the type of cipher wrong. Think about the letter frequencies.");
 
         }
+
     }
 
 
-    bool Check()
+    async void Check()
     {
+        decryptionAttempt = decryptionAttempt.ToLower();
         bool error = false;
         int i = 0;
+
         while(! error && i < ciphertext.Length)
         {
             if(ciphertext[i] != decryptionAttempt[i])
             {
                 error = true;
-                return false;
+                hints.Clear();
+                hints.Add("Incorrect from character i onwards :(");
             }
+            i++;
         }
-        return true;
+        hints.Clear();
+        hints.Add("Correct!");
+        await Confetti();
+    }
+
+    string RandomWord()
+    {
+        string[] words = File.ReadAllLines(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/nouns.txt"));
+        return words[rnd.Next(0, words.Length)];
+    }
+
+    public async Task Confetti()
+    {
+        await JS.InvokeVoidAsync("startConfetti");
     }
 
 

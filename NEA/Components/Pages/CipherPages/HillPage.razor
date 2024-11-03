@@ -5,6 +5,8 @@
 
 <h1>Hill Cipher</h1>
 
+<p>Note: special characters and spaces are replaced by an 'X' in the plaintext before encryption. Special characters and spaces in the ciphertext are removed before decryption. </p>
+
 <p>Plaintext: </p>
 <textarea class="submission" @bind=plaintext @bind:event="oninput"></textarea>
 <br>
@@ -14,6 +16,7 @@
 <p>Enter key: </p>
 <textarea class="submission" @bind=key @bind:event="oninput"></textarea>
 <br />
+<p>@errors</p>
 <button @onclick="Encrypt">ENCRYPT</button>
 <button @onclick="Decrypt">DECRYPT</button>
 <br />
@@ -22,15 +25,76 @@
     string plaintext = "";
     string key = "";
     string ciphertext = "";
+    string errors = "";
+
+    bool ValidKey()
+    {
+        errors = "";
+        plaintext = plaintext.ToUpper();
+        ciphertext = ciphertext.ToUpper();
+        if (Math.Sqrt(key.Length) == (int)(Math.Sqrt(key.Length)) && key.Length != 0)
+        {
+            Matrix m = new Matrix(key.ToUpper());
+
+            if (CipherMathsFunctions.Coprime(m.det(), 26))
+            {
+                return true;
+            }
+        }         
+
+        errors = "Key must be in the form of an nxn matrix (formatted as a list of letters with no spaces or commas), whose determinant is coprime with 26.";
+        return false;
+
+    }
 
     void Encrypt()
     {
-        ciphertext = Hill.Encrypt(plaintext, key);
+
+        if(ValidKey())
+        {
+            plaintext = plaintext.ToLower();
+            string s = "";
+            foreach (char c in plaintext)
+            {
+                if (CipherMathsFunctions.isLetter(c))
+                {
+                    s += c;
+                }
+                else
+                {
+                    s += 'x';
+                }
+            }
+            while (s.Length % Math.Sqrt(key.Length) != 0)
+            {
+                s += 'x';
+            }
+            plaintext = s.ToUpper();
+            ciphertext = Hill.Encrypt(plaintext, key);
+        }
+
     }
 
     void Decrypt()
     {
-        plaintext = Hill.Decrypt(ciphertext, key);
+        if(ValidKey())
+        {
+            ciphertext = ciphertext.ToLower();
+            string s = "";
+            foreach (char c in ciphertext)
+            {
+                if (CipherMathsFunctions.isLetter(c))
+                {
+                    s += c;
+                }
+            }
+            while (s.Length % Math.Sqrt(key.Length) != 0)
+            {
+                s += 'x';
+            }
+            ciphertext = s.ToUpper() ;
+            plaintext = Hill.Decrypt(ciphertext, key);
+        }        
     }
 
 }

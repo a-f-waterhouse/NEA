@@ -28,7 +28,7 @@ namespace NEA
             return matrix[a, b];
         }
 
-        private int det()
+        public int det()
         {
             int d = 0;
             if (matrix.Length > 1)

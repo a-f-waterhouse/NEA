@@ -5,13 +5,13 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEA", "NEA\NEA.csproj", "{E9CA372B-6F94-4714-8ABB-DB42A4D586A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "graphs and stuff", "graphs and stuff\graphs and stuff.csproj", "{AB758A9F-CA49-4D99-BC20-07CB409805C1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptanalysis", "Cryptanalysis\Cryptanalysis.csproj", "{9C99F0F2-05EE-4030-B3D3-FACBD63B519C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ciphers", "Ciphers\Ciphers.csproj", "{B87A1FA7-814F-4AD2-B42E-35957219A42D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hill Climbing", "Hill Climbing\Hill Climbing.csproj", "{BAEFDD9E-4848-4162-861B-3BD3D4C6B3DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu", "Graph\Menu.csproj", "{FE1FF51D-67F7-4951-AD33-3CD55FB943EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		{E9CA372B-6F94-4714-8ABB-DB42A4D586A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9CA372B-6F94-4714-8ABB-DB42A4D586A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9CA372B-6F94-4714-8ABB-DB42A4D586A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB758A9F-CA49-4D99-BC20-07CB409805C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB758A9F-CA49-4D99-BC20-07CB409805C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB758A9F-CA49-4D99-BC20-07CB409805C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB758A9F-CA49-4D99-BC20-07CB409805C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C99F0F2-05EE-4030-B3D3-FACBD63B519C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C99F0F2-05EE-4030-B3D3-FACBD63B519C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C99F0F2-05EE-4030-B3D3-FACBD63B519C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{BAEFDD9E-4848-4162-861B-3BD3D4C6B3DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAEFDD9E-4848-4162-861B-3BD3D4C6B3DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAEFDD9E-4848-4162-861B-3BD3D4C6B3DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE1FF51D-67F7-4951-AD33-3CD55FB943EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE1FF51D-67F7-4951-AD33-3CD55FB943EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE1FF51D-67F7-4951-AD33-3CD55FB943EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE1FF51D-67F7-4951-AD33-3CD55FB943EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

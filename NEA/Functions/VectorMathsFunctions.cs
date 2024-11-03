@@ -14,7 +14,6 @@
 
         public static double Angle(Vector a, Vector b) //radians
         {
-            Console.WriteLine(DotProduct(a, b) + " " + a.Magnitude() + " " + b.Magnitude());
             return Math.Acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
         }
 

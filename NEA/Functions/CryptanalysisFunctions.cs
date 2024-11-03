@@ -7,6 +7,8 @@ namespace NEA
         private static Random rnd = new Random();
         private static Dictionary<string, double> ExpectedBigrams = ExpectedBigramFrequencies();
 
+
+
         public static int Length(int[] a)
         {
             int length = 0;
@@ -48,28 +50,7 @@ namespace NEA
                 }
             }
             return bigrams;
-        }
-
-        public static Dictionary<string, int> CalculateBigramFrequencies(string input)
-        {
-            Dictionary<string, int> frequencies = new Dictionary<string, int>();
-            for (int i = 0; i < input.Length-1; i++)
-            {
-                if(CipherMathsFunctions.isLetter(input[i])&& CipherMathsFunctions.isLetter(input[i+1]))
-                {
-                    string bigram = input[i].ToString() + input[i + 1].ToString();
-                    if (!frequencies.ContainsKey(bigram))
-                    {
-                        frequencies.Add(bigram, 1);
-                    }
-                    else
-                    {
-                        frequencies[bigram]++;
-                    }
-                }
-            }
-            return frequencies;
-        } //EEEEEEEEEEEEee
+        }       
 
         public static double BigramFitness(string text)
         {
@@ -159,6 +140,7 @@ namespace NEA
 
             for (int i = 0; i < iterations; i++)
             {
+                Console.WriteLine(i);
                 string key = "";
                 while (key.Length < 26)
                 {

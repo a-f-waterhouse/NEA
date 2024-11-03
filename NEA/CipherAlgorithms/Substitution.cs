@@ -13,7 +13,19 @@
                     key += (char)(i + 97);
                 }
             }
-
+            if(key.Length > 26)
+            {
+                string newKey = "";
+                foreach(char c in key)
+                {
+                    if(!newKey.Contains(c) && CipherMathsFunctions.isLetter(c))
+                    {
+                        newKey += c;
+                    }
+                }
+                key = newKey;
+            }
+            
             for (int i = 0; i < 26; i++)
             {
                 encryptionMap.Add((char)(i + 97), key[i]);
