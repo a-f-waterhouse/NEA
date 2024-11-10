@@ -1,16 +1,62 @@
 ﻿@page "/ciphers"
+@inject IJSRuntime JS
 
 <h3>Ciphers</h3>
-@foreach (string filePath in Directory.GetFiles(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Components/Pages/CipherPages")))
-{
-    FileInfo fI = new FileInfo(filePath);
-    string c = fI.Name.Split('.')[0];    
-    <NavLink href="@c">
-        <div class="cipherLink">@c</div>
-    </NavLink>
+<img style="width:42%;height:44%;position:absolute;left:335px;top:202px;" src=" bkg.png" />
+<div style="width:800px;height:400px;">    
 
-}
+    @{
+
+        Node hill = new Node("hill", null, null);
+        Node nihilist = new Node("nihilist", null, null);
+        Node railfence = new Node("railfence", null, null);
+        Node polybius = new Node("polybius", railfence, nihilist);
+        Node vigenere = new Node("vigenere", hill, null);
+        Node substitution = new Node("substitution", vigenere, polybius);
+        Node affine = new Node("affine", null, null);
+        Node caesar = new Node("caesar", affine, substitution);
+        Node baconian = new Node("baconian", caesar, null);
+        int position = 50;
+        int top = 30;
+
+
+        void Display(Node startNode)
+        {
+
+            <p style="display:block;position:absolute;left:@position%;top:@top%;">@startNode.cipher</p>
+            top += 10;
+            if (startNode.LeftChild != null)
+            {
+                int num = 500 / top;
+
+                position -= num;
+                Display(startNode.LeftChild);
+                position += num;
+            }
+            if (startNode.RightChild != null)
+            {
+                int num = 500 / top;
+                position += num;
+                Display(startNode.RightChild);
+                position -= num;
+            }
+
+            top -= 10;
+        }
+
+        Display(baconian);
+    }
+</div>
+
 
 @code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("hello");
+        }
+    }
 
 }

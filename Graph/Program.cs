@@ -8,26 +8,37 @@ using System.Threading.Tasks;
 namespace Menu
 {
     internal class Program
-    { 
-        public void Traversal(Node[] tree, int startnode)
+    {
+
+        static void Traversal(Node startNode)
         {
-            if(tree[startnode].leftPointer != -1)
+            Console.WriteLine(startNode.cipher);
+            if (startNode.LeftChild != null)
             {
-                Traversal(tree, tree[startnode].leftPointer);
+                Traversal(startNode.LeftChild);
             }
-            Console.WriteLine(tree[startnode].cipher);
-            if (tree[startnode].rightPointer != -1)
+            
+            if (startNode.RightChild != null)
             {
-                Traversal(tree, tree[startnode].rightPointer);
+                Traversal(startNode.RightChild);
             }
         }
 
-
         static void Main(string[] args)
         {
-            Node baconian = new Node()
+            Node hill = new Node("hill", null, null);
+            Node nihilist = new Node("nihilist", null, null);
+            Node railfence = new Node("railfence", null, null);
+            Node polybius = new Node("polybius", railfence, nihilist);
+            Node vigenere = new Node("vigenere", null, hill);
+            Node substitution = new Node("substitution", vigenere, polybius);
+            Node affine = new Node("affine", null, null);
+            Node caesar = new Node("caesar", affine, substitution);
+            Node baconian = new Node("baconian", caesar, null);
+            
+            Traversal(baconian);
 
-            Node[] tree = { new Node("baconian" ),  };
+            Console.ReadKey();
 
         }
     }
