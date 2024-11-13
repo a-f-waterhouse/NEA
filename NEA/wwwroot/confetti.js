@@ -1,4 +1,4 @@
-﻿var maxParticleCount = 150; //set max confetti count
+﻿var maxParticleCount = 120; //set max confetti count
 var particleSpeed = 2; //set the particle animation speed
 var hello; //call to start confetti animation
 var stopConfetti; //call to stop adding confetti
