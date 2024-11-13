@@ -49,24 +49,15 @@
     bool ValidKey()
     {
         plaintext = plaintext.ToLower();
-        ciphertext = ciphertext.ToLower();
-        string check = "";
+
         foreach (char c in key)
         {
-            if (!check.Contains(c) && CipherMathsFunctions.isLetter(c))
-            {
-                check += c;
-            }
-            else if (check.Contains(c))
-            {
-                errors = "Cannot have duplicate letters in the key.";
-                return false;
-            }
-            else
+            if (!CipherMathsFunctions.isLetter(c))
             {
                 errors = "Key must only be made up of letters.";
                 return false;
             }
+
         }
         return true;
     }

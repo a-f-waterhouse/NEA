@@ -7,23 +7,22 @@
 
     @{
 
-        Node hill = new Node("hill", null, null);
-        Node nihilist = new Node("nihilist", null, null);
-        Node railfence = new Node("railfence", null, null);
-        Node polybius = new Node("polybius", railfence, nihilist);
-        Node vigenere = new Node("vigenere", hill, null);
-        Node substitution = new Node("substitution", vigenere, polybius);
-        Node affine = new Node("affine", null, null);
-        Node caesar = new Node("caesar", affine, substitution);
-        Node baconian = new Node("baconian", caesar, null);
+        Node hill = new Node("Hill", null, null);
+        Node nihilist = new Node("Nihilist", null, null);
+        Node railfence = new Node("Railfence", null, null);
+        Node polybius = new Node("Polybius", railfence, nihilist);
+        Node vigenere = new Node("Vigenere", hill, null);
+        Node substitution = new Node("Substitution", vigenere, polybius);
+        Node affine = new Node("Affine", null, null);
+        Node caesar = new Node("Caesar", affine, substitution);
+        Node baconian = new Node("Baconian", caesar, null);
         int position = 50;
         int top = 30;
 
-
         void Display(Node startNode)
         {
-
-            <p style="display:block;position:absolute;left:@position%;top:@top%;">@startNode.cipher</p>
+            string link = startNode.cipher + "Page"; 
+            <a href="@link"><p style="display:block;position:absolute;left:@position%;top:@top%;">@startNode.cipher</p></a>
             top += 10;
             if (startNode.LeftChild != null)
             {

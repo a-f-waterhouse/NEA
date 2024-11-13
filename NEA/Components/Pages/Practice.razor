@@ -155,15 +155,7 @@ To check your answer, type it into the answer box and press submit.
                 break;
 
             case "vigenere":
-                string key = "";
-                while (key.Length < 26)
-                {
-                    int c = rnd.Next(0, 26) + 97;
-                    if (!key.Contains((char)c))
-                    {
-                        key += (char)c;
-                    }
-                }
+                string key = RandomWord();
                 ciphertext = Vigenere.Encrypt(key, plaintext);
                 break;
 
@@ -254,8 +246,30 @@ To check your answer, type it into the answer box and press submit.
 
     string RandomWord()
     {
-        string[] words = File.ReadAllLines(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/nouns.txt"));
-        return words[rnd.Next(0, words.Length)];
+        WebRequest request = WebRequest.Create("https://random-word-api.herokuapp.com/word");
+        request.Method = WebRequestMethods.Http.Get;
+        request.ContentType = "application/json";
+        string word = "";
+        try
+        {
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+            {
+                word = sr.ReadToEnd();
+            }
+        }
+        catch
+        {
+            hints.Add("API Request Failed. Please try again.");
+        }
+
+
+        word = word.Substring(2, word.Length - 4);
+        Console.WriteLine(word);
+        
+        return word;
+        //string[] words = File.ReadAllLines(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot/nouns.txt"));
+        //return words[rnd.Next(0, words.Length)];
     }
 
     public async Task Confetti()

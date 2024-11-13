@@ -91,6 +91,7 @@
 
             for (int i = 0; i < 25; i++)
             {
+                Console.WriteLine(ioc[i]);
                 if (ioc[i] > 0.06)
                 {
                     return i + 1;
