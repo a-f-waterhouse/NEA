@@ -49,6 +49,8 @@
     bool ValidKey()
     {
         plaintext = plaintext.ToLower();
+        ciphertext = ciphertext.ToLower();
+        key = key.ToLower();
 
         foreach (char c in key)
         {

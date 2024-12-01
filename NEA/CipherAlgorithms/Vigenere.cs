@@ -21,18 +21,21 @@
         public static string Encrypt(string key, string plaintext)
         {
             
-            key = fullKey(key);
+            //key = fullKey(key);
             string output = "";
+            int keyI = 0;
             for (int i = 0; i < plaintext.Length; i++)
             {
                 if (CipherMathsFunctions.isLetter(plaintext[i]))
-                {
-                    output += (char)((plaintext[i] - 'a' + key[i % key.Length] - 'a') % 26 + 'a');                    
+                {                    
+                    output += (char)((plaintext[i] - 'a' + key[keyI % key.Length] - 'a') % 26 + 'a');
+                    keyI++;
                 }
                 else
                 {
                     output += plaintext[i];
                 }
+                
                 
             }
             
@@ -41,13 +44,15 @@
 
         public static string Decrypt(string key, string ciphertext)
         {
-            key = fullKey(key);
+           // key = fullKey(key);
             string result = "";
+            int keyI = 0;
             for (int i = 0; i < ciphertext.Length; i++)
             {
                 if (CipherMathsFunctions.isLetter(ciphertext[i]))
                 {
-                    result += (char)((ciphertext[i] - key[i % key.Length] + 26) % 26 + 'a');
+                    result += (char)((ciphertext[i] - key[keyI % key.Length] + 26) % 26 + 'a');
+                    keyI++;
                 }
                 else
                 {
